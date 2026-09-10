@@ -1,6 +1,6 @@
 # Eir
 
-Eir is a Flask/MongoDB web app built for [Greve Gymnastik og Trampolin](https://greve-gymnastik.dk/) (GGT), a Danish gymnastics and trampoline club, to handle scheduling, coach/parent notifications, and integration with the club's existing systems. It is currently being used for the Trampoline department only.
+Eir is a Flask/MongoDB web app built for [Greve Gymnastik og Trampolin](https://greve-gymnastik.dk/) (GGT), a Danish gymnastics and trampoline club, to add additional features to the club's existing management system. It is currently being used for the Trampoline department only.
 
 This repo is a **sanitized snapshot** of an actively developed private codebase, shared as a portfolio sample. Real member data, IDs, and secrets have been removed or replaced with synthetic test data; some tests that depended on third-party platform data have been excluded rather than reworked around fake data, for reasons noted below. History has been squashed to a single clean commit.
 
@@ -8,8 +8,26 @@ This repo is a **sanitized snapshot** of an actively developed private codebase,
 
 - Pulls team and schedule data from **Conventus** (the club's membership/scheduling system, no public API — done via scraping) and **GymDanmark**, converting schedule data into iCalendar and FullCalendar-compatible formats
 - Automates coach notifications via Facebook Messenger (HMAC webhook verification, verification-code linking flow, Meta App Review, Business Verification, and Utility Message templates to work within Meta's EU/EEA messaging restrictions), with Telegram as an additional channel
-- Handles session-based role logic for coaches vs. other users, with Danish/English localization throughout (python-i18n)
-- Runs on a daily automated pipeline (GitHub Actions) that regenerates schedule files, deployed on Render with MongoDB Atlas
+- Handles session-based role logic for coaches vs. other users, with Danish/English localization throughout (using python-i18n)
+- Member features:
+    - Allows for member signouts
+    - Calendar with team schedule and GymDanmark Trampoline events
+- Coach features:
+    - Notifications when a member signs up or cancels for a class
+    - Checkin-in of multiple teams at once (i.e. when two teams meet at the same time, or their signup is split based on payment method)
+    - Check teams for added and removed members
+
+## Planned Updates
+- Add a coach-facing schedule view
+- Send notifications to coaches when a member signs up or cancels for a class
+- Expand notifications to allow for coach <-> parent/member messaging
+- Calendar improvements:
+    - Sign-out or sign-up directly from a calendar event
+    - Editing of regular events (e.g. to cancel or change location) and automatic propagation to the calendar feed
+    - Adding events to the calendar feed (e.g. for special events or competitions)
+    - The ability to configure teams in your calendar feed (e.g. only show teams you coach -- if you are a Sports Manager or see the schedule for a specific team, if you are a member of multiple teams)
+    - Automatic updates of the GymDanmark calendar data and iCalendar export (currently requires a manual trigger)
+- Send error notifications to admins via Telegram or Messenger
 
 ## Stack
 
