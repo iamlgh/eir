@@ -7,7 +7,7 @@ This repo is a **sanitized snapshot** of an actively developed private codebase,
 ## What it does
 
 - Pulls team and schedule data from **Conventus** (the club's membership/scheduling system, no public API — done via scraping) and **GymDanmark**, converting schedule data into iCalendar and FullCalendar-compatible formats
-- Automates coach/parent notifications via Facebook Messenger (HMAC webhook verification, verification-code linking flow, Meta App Review, Business Verification, and Utility Message templates to work within Meta's EU/EEA messaging restrictions), with Telegram as an additional channel
+- Automates coach notifications via Facebook Messenger (HMAC webhook verification, verification-code linking flow, Meta App Review, Business Verification, and Utility Message templates to work within Meta's EU/EEA messaging restrictions), with Telegram as an additional channel
 - Handles session-based role logic for coaches vs. other users, with Danish/English localization throughout (python-i18n)
 - Runs on a daily automated pipeline (GitHub Actions) that regenerates schedule files, deployed on Render with MongoDB Atlas
 
@@ -22,6 +22,8 @@ Flask · MongoEngine · MongoDB Atlas · pytest · Playwright · GitHub Actions 
 **The Messenger integration was a real lesson in platform constraints.** It passed Meta's App Review and Business Verification, then ran into Meta's EU/EEA restrictions on standard messaging — solved by moving to Utility Message templates, which are exempt from the usual 24-hour messaging window. Telegram was added as an additional channel alongside it.
 
 **Some tests involving Conventus page data are adjusted for this snapshot — including the Playwright end-to-end tests.** Conventus's terms of service restrict local storage of platform data. Where reasonable, tests were rebuilt with synthetic data or fixtures instead of real Conventus pages; tests with no clean synthetic substitute were removed from this public copy. The full test suite — using live data where synthetic substitutes aren't practical — exists in the private repo.
+
+**`main` is protected by a branch ruleset** (required status checks via `run-pytest`, required PR review, linear history, no force pushes) — set up as a demonstration of workflow practices for team collaboration, even as a solo maintainer.
 
 ## Running it locally
 
