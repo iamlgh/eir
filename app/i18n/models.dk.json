@@ -1,0 +1,8 @@
+{
+  "started": "Begyndt",
+  "progressions_started": "Progressioner begyndt",
+  "progressions_complete": "Kan lave progressioner, men ikke springet",
+  "complete_to_mat": "Spring kan laves til måtte",
+  "mastered": "Spring er konkurrence klar",
+  "not_started": "Ikke begyndt"
+}

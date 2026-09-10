@@ -1,0 +1,20 @@
+services:
+  flask:
+    build: .
+    image: eir:latest
+    depends_on:
+      - db
+    ports:
+      - "80:5000"
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://db:27017
+      - LOG_LEVEL=debug
+      - FLASK_ENV=dev
+  db:
+    image: mongodb/mongodb-community-server:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - /c/temp/backup:/tmp/mongo_backup

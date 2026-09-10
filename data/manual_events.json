@@ -1,0 +1,24 @@
+[
+  {
+    "year": 2027,
+    "title": "Forårsopvisning",
+    "days": "11 apr",
+    "place": "Greve Idrætscenter",
+    "address": "Greve Idrætscenter, Lillevangsvej 88, 2670 Greve"
+  },
+  {
+    "year": 2027,
+    "title": "Frivolten Cup",
+    "days": "7 maj - 8 maj",
+    "place": "Herrljunga Sim & Idrottshall",
+    "url": "https://cup.frivolten.com/"
+  },
+  {
+    "year": 2026,
+    "title": "Instruktørmøde",
+    "start": "20260827T160000Z",
+    "end": "20260827T190000Z",
+    "place": "Greve Borgerhus",
+    "address": "Greveager 9, 2670 Greve"
+  }
+]

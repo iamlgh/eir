@@ -1,0 +1,17 @@
+{
+  "eir_for_conventus": "Eir for Conventus",
+  "member_updates_summary": {
+    "one": "Members added or removed within the last 24 hours:",
+    "many": "Members added or removed within the last %{count} days:"
+  },
+  "signed_out": "signed-out",
+  "weekday_plurals": [ "Mondays", "Tuesdays", "Wednesdays", "Thursdays", "Fridays", "Saturdays", "Sundays" ],
+  "sick": "Sick",
+  "injured": "Injured",
+  "vacation": "Vacation",
+  "school": "School",
+  "work": "Work",
+  "sport": "Sport",
+  "other": "Other",
+  "end": "end"
+}

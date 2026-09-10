@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trampolinists</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="content-box">
+        <h2>Choose trampolinist</h2>
+
+        <div id="script-content">
+            {{ content | safe }}
+        </div>
+
+        <script>
+            window.onload = function() {
+                const form = document.querySelector('form');
+                if (form) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'username';
+                    input.value = "{{ username }}";
+                    form.appendChild(input);
+                }
+            };
+        </script>
+
+        <div>
+            <!--<br><a href="{{ url_for('add_trampolinist_page', user=username) }}" class="btn">Add trampolinist</a>-->
+            <br><a href="{{ url_for('main_menu', user=username) }}" class="btn">← {{ t('app.back_to_main_menu') }}</a>
+            <br><a href="{{ url_for('logout_c') }}" class="btn-red">{{ t('app.log_out') }}</a>
+        </div>
+    </div>
+</body>
+</html>

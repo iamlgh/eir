@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member instructions — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="container">
+    <h1>Member instructions &ndash; Eir</h1>
+    <p class="updated">Last updated: August 8, 2026</p>
+
+    <h2>What is Eir?</h2>
+    <p class="intro">Eir is a tool built on top of Conventus to provide added functionality. For members, it gives the ability for easy sign-outs when they cannot attend training. Currently, you only have access to signing out (you can sign back up if you e.g. choose the wrong date, or if the member can attend training anyway), and a calendar that shows trainings times for your team and events from GymDanmark's calendar. We hope to add more features in the future.</p>
+
+    <h2>How do I get access to Eir?</h2>
+    <p>As a member of a Trampoline team at Greve Gymnastik og Trampolin, you have access to Eir using your Conventus login. The link to access Eir is: <a href="https://eir-qkcv.onrender.com/member">https://eir-qkcv.onrender.com/member</a></p>
+
+    <h2>Eir login</h2>
+    <p>Logging in gives you access to Eir's features.</p>
+    <p>Choose <b>Mobile</b> or <b>E-mail</b> and use your Conventus login to access Eir.</p>
+    <img src="{{url_for('static', filename='images/medlemslogin.png')}}" alt="Eir member login page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+    <p>Eir does <strong>not</strong> store your login or any personal information from your Conventus account. Your account is used to fetch your team information from Conventus. All signouts stored in Eir's database use only your member id, team id and the information provided by your for the signout. Eir briefly receives your first name and last name from Conventus in order to personalize the login page, and any team information is only stored in your browser as an encrypted cookie.</p>
+
+    <h2>Eir Main Menu</h2>
+    <p>After logging in, Eir's main menu will be displayed, where you can see features available to the member.</p>
+    <img src="{{url_for('static', filename='images/medlemsmenu.png')}}" alt="Eir main menu page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+    <h2>Eir Sign-outs/ups</h2>
+    <p>After clicking <b>Member Sign-outs/ups</b> you can sign out of a training. Choose: the training date, team, reason, and write a short comment. Click the <b>Sign Out</b> button.</p>
+    <img src="{{url_for('static', filename='images/afmelding.png')}}" alt="Eir Sign-outs / Sign-ups" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+    <p>After signing-out from a training session, you can see your sign-out in your sign-up menu.</p>
+    <img src="{{url_for('static', filename='images/afmelding_gennemfoert.png')}}" alt="Eir sign-out successful" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+  <h2>Calender</h2>
+  <p>The calender has three views: Week, Month, and Year. Month view is shown by default, when opening the calendar. On a mobile device, the month view is a list, on a tablet or desktop device the Month view is a grid calendar.</p>
+
+  <h2>Support</h2>
+    <p>Eir is available in Danish and English, and support is available in both languages.</p>
+    <p>Questions and support requests can be sent to: <strong><span id="eir-contact"></span></strong>. You can also join our Telegram group: <span id="eir-tg"></span></p>
+    <script>
+        const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs="; 
+        const email = atob(encoded);
+        const container = document.getElementById("eir-contact");
+        container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+        const encoded_tg = "aHR0cHM6Ly90Lm1lLytpYjIyZzU2U1N1b3dNRGsw";
+        const tg = atob(encoded_tg);
+        const container_tg = document.getElementById("eir-tg");
+        container_tg.innerHTML = `<a href="${tg}" target="_blank">${tg}</a>`;
+    </script>
+</div>
+</body>
+</html>

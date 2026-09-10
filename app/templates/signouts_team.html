@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.team_signouts', team_name=team) }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+    <script>
+        function goTo(menu, team, user) {
+            const selectedDate = document.getElementById('selected-date').value;
+            const encodedTeam = encodeURIComponent(team);
+            // URL format: /checkin/Team Name/2026-04-10/user
+            window.location.href = `/${menu}/${encodedTeam}/${selectedDate}/${user}`;
+        }
+    </script>
+</head>
+<body>
+    <div class="menu-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message | safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2>{{ t('app.team_signouts', team_name=team) }}</h2>
+        <div class="menu-container">
+            <label for="selected-date">Select Date:</label>
+            <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}"
+                   onchange="window.location.href = '{{ url_for('view_signouts', team_name=team, user=user, date='PLACEHOLDER') }}'.replace('PLACEHOLDER', this.value)" />
+            <hr>
+            <div id="script-content">
+                {{ content | safe }}
+            </div>
+            <!--page should show that there are no sign-outs for this team and date, and offer a button to goto check-in for this team and date-->
+            <a href="{{ url_for('checkin_team', user=user, date=date, team_name=team) }}" name="goto-ci" class="btn">{{ t('app.goto_checkin') }}</a>
+        </div>
+        <a href="{{ url_for('signouts_menu', user=user) }}" name="goto-so-menu" class="btn">{{ t('app.back_to_signouts_menu') }}</a>
+        <a href="{{ url_for('checkin_menu', user=user) }}" name="goto-ci-menu" class="btn">{{ t('app.checkin_menu') }}</a>
+        <a href="{{ url_for('main_menu', user=user) }}" name="goto-main-menu" class="btn">{{ t('app.main_menu') }}</a>
+        <a href="{{ url_for('logout_c') }}" name="logout" class="btn-red">{{ t('app.log_out') }}</a>
+    </div>
+</body>
+</html>

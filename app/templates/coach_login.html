@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.coach_login_title') }}</title>
+    <style>
+        input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body class="center-it">
+    <div class="login-card">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message | safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <h2>{{ t('app.eir_for_conventus') }}</h2>
+        <p>Greve Trampolin {{ t('app.coach_login_title') }}</p>
+        <form action="/login" method="POST">
+            <!--<label for="member">{{ t('app.username') }}</label>-->
+            <input type="text" name="username" placeholder="{{ t('app.username') }}" required>
+            <!--<label for="password">{{ t('app.password') }}</label>-->
+            <input type="password" name="password" placeholder="{{ t('app.password') }}" required>
+            <button type="submit">{{ t('app.log_in') }}</button>
+            <hr />
+            <a href="{{ url_for('login_m') }}" type="submit">{{ t('app.login_as_member') }}</a><!--Switch to member login/Skift til medlemslogin-->
+        </form>
+    </div>
+</body>
+</html>

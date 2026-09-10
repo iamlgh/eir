@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <title>{{ t('app.select_profile') }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='cstyles.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+
+<body>
+    <div class="menu-container">
+        <table border="0" cellpadding="2" cellspacing="0" class="bt" style="font-weight: bold; font-size: 8pt; color: #646464;">
+            <tr>
+                <td bgcolor="#E6E6E6" height="20" style="padding: 3px; padding-left: 12px; color: #000000; border-bottom: 1px solid #969696;">
+                    {{ t('app.profiles') }}
+                </td>
+                <td bgcolor="#E6E6E6" style="padding: 3px; padding-left: 12px; color: #000000; border-bottom: 1px solid #969696;" height="20" align="right">
+                    <button type="button">
+                        {{ t('app.cancel') }}
+                        <!--TODO Change to a cancel, which will log out if logging in and back to the previous page-->
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#FFFFFF" style="padding: 9px; padding-top: 2px;" valign="top" colspan="2">
+                    <div id="script-content">
+                        {{ content | safe }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

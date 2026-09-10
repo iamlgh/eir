@@ -1,0 +1,10 @@
+{
+  "eir_for_conventus": "Eir til Conventus",
+  "member_updates_summary": {
+    "one": "Tilmeldte og frameldte medlemmer det seneste døgn:",
+    "many": "Tilmeldte og frameldte medlemmer de seneste %{count} dage:"
+  },
+  "signed_out": "afmeldt",
+  "weekday_plurals": "mandage, tirsdage, onsdage, torsdage, fredage, lørdage, søndage",
+  "end": "slut"
+}

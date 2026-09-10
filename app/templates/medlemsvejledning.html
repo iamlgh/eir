@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medlemsvejledning — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+<div class="container">
+  <h1>Medlemsvejledning &ndash; Eir</h1>
+  <p class="updated">Sidste opdateret: 8. august 2026</p>
+
+  <h2>Hvad er Eir?</h2>
+  <p class="intro">Eir er et værktøj bygget oven på Conventus. For medlemmer, giver det mulighed for nem afmelding, når man ikke kan komme til træning. Pt. har man kun adgang til afmelding (man kan tilmelde sig igen, hvis man f.eks. vælger den forkerte dato, eller medlemmet kan komme til træning, alligevel), og en kalendar som viser træningstider på din hold og begivenheder fra GymDanmarks kalendar. Vi håber at tilføje flere funktioner i fremtiden.</p>
+
+  <h2>Hvordan får man adgang til Eir?</h2>
+  <p>Som medlem af en Trampolingymnastik hold på Greve Gymnastik og Trampolin, har du adgang til Eir gennem din Conventus-konto. Fra dette link: <a href="https://eir-qkcv.onrender.com/member">https://eir-qkcv.onrender.com/member</a>.</p>
+
+  <h2>Eir login</h2>
+  <p>Login giver adgang til Eirs funktioner.</p>
+  <p>Vælg <b>Mobil</b> eller <b>E-mail</b> og brug din Conventus login for adgang til Eir.</p>
+  <img src="{{url_for('static', filename='images/medlemslogin.png')}}" alt="Eir medlemslogin" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+  <p>Eir gemmer <strong>ikke</strong> dit login eller andre personlige oplysninger fra din Conventus-konto. Din konto er brugt til at hente din hold information fra Conventus. Hver afmelding, der gemmes i Eirs database, bruger kun dit medlems-ID, hold-ID og de oplysninger, du har angivet ved afmeldingen. Eir modtager dit fornavn og efternavn fra Conventus for at personliggøre hovedmenuen. Når et login er gennemført, gemmes dit navn og holdoplysninger kun i din browser som en krypteret cookie.</p>
+
+  <h2>Eir hovedmenu</h2>
+  <p>Efter login får du adgang til Eirs hovedmenu, hvor du kan se dine aktuelle funktioner.</p>
+  <img src="{{url_for('static', filename='images/medlemsmenu.png')}}" alt="Eir hovedmenu page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+  <h2>Eir Afmelding/Tilmelding</h2>
+  <p>Efter at vælge Medlem Afmelding/Tilmelding, kan man afmelde sig fra en træning. Vælg: træningsdato, hold, årsag, og skriv gerne en kort kommentar. Du behøver ikke at skrive noget fortroligt, men af ​​hensyn til planlægningen er det godt for trænerne at vide, om du kommer til at gå glip af flere træninger. Tryk på Afmeld-knappen.</p>
+  <img src="{{url_for('static', filename='images/afmelding.png')}}" alt="Eir Afmelding / Tilmelding" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+  <p>Efter at afmelde en træning, kan du se din afmelding i din tilmeldingsmenu.</p>
+  <img src="{{url_for('static', filename='images/afmelding_gennemfoert.png')}}" alt="Eir Afmelding / Tilmelding gennemført" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+  <h2>Kalender</h2>
+  <p>Kalenderen har tre visninger: Uge, Måned og År. Månedsvisningen vises som standard, når kalenderen åbnes. På en mobilenhed er månedsvisningen en liste, mens månedsvisningen på en tablet eller desktop er en gitterkalender.</p>
+
+  <h2>Support</h2>
+  <p>Eir er tilgængelig på dansk og engelsk, og support er tilgængelig på begge sprog.</p>
+  <p>Spørgsmål og support-anmodninger kan sendes til: <strong><span id="eir-contact"></span></strong>. Du kan også tilslutte dig vores Telegram-gruppe: <span id="eir-tg"></span></p>
+    <script>
+        const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs="; 
+        const email = atob(encoded);
+        const container = document.getElementById("eir-contact");
+        container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+        const encoded_tg = "aHR0cHM6Ly90Lm1lLytpYjIyZzU2U1N1b3dNRGsw";
+        const tg = atob(encoded_tg);
+        const container_tg = document.getElementById("eir-tg");
+        container_tg.innerHTML = `<a href="${tg}" target="_blank">${tg}</a>`;
+    </script>
+</div>
+</body>
+</html>

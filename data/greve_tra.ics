@@ -1,0 +1,488 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Greve Gymnastik og Trampolin//greve-gymnastik.dk//
+X-WR-CALNAME:Trampolin Aktiviteter
+SUMMARY:Trampolin Aktiviteter
+BEGIN:VEVENT
+SUMMARY:Trampolin Dan Camp 1
+DTSTART;VALUE=DATE:20260131
+DTEND;VALUE=DATE:20260202
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dan-camp-1%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dan-camp-1/\n Tilm
+ eldingsfrist: 13. januar 2026\n Program: https://gymdanmark.dk/wp-content/
+ uploads/2026/01/Officiel-Plan-for-Dan-Camp-1-2026.pdf
+LOCATION:Femhøje Idrætscenter\, Femhøje 5\, 9800 Hjørring
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Landsholdssamling
+DTSTART;VALUE=DATE:20260207
+DTEND;VALUE=DATE:20260209
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fsamling%2Flandsholdssamlin%2F
+DESCRIPTION:https://gymdanmark.dk/samling/landsholdssamlin/\n Tilmeldingsf
+ rist: 2. februar 2026
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Forbundsmesterskab U13\, U15 og U17 – Individuel
+DTSTART;VALUE=DATE:20260227
+DTEND;VALUE=DATE:20260301
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-forbundsmestersk
+ ab-u13-u15-og-u17-individuel%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-forbundsmesterskab
+ -u13-u15-og-u17-individuel/\n Tilmeldingsfrist: 10. februar 2026\n Program
+ : https://gymdanmark.dk/wp-content/uploads/2026/02/Program-FM-2026.pdf
+LOCATION:Vendsyssel Idrætscenter\, Stadionvej 17\, 9760 Vrå
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Forbundsmesterskab U13\, U15 og U17 – Synkron
+DTSTART;VALUE=DATE:20260227
+DTEND;VALUE=DATE:20260301
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-forbundsmestersk
+ ab-u13-u15-og-u17-synkron%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-forbundsmesterskab
+ -u13-u15-og-u17-synkron/\n Tilmeldingsfrist: 10. februar 2026\n Program: h
+ ttps://gymdanmark.dk/wp-content/uploads/2026/02/Program-FM-2026.pdf
+LOCATION:Vendsyssel Idrætscenter\, Stadionvej 17\, 9760 Vrå
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 1
+DTSTART;VALUE=DATE:20260307
+DTEND;VALUE=DATE:20260308
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-1%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-1/\n Tilmel
+ dingsfrist: 17. februar 2026\n Program: https://gymdanmark.dk/wp-content/u
+ ploads/2026/02/2026-Program-DanCup-Odense.pdf
+LOCATION:Odense Idrætspark\, Israels Plads 3\, 5200 Odense V
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Worldcup 2
+DTSTART;VALUE=DATE:20260312
+DTEND;VALUE=DATE:20260314
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fworldcup-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/worldcup-2/
+LOCATION:Alkmaar\, Nederland
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Klubtræf 2 område 2 – Synkron – Trampolin
+DTSTART;VALUE=DATE:20260315
+DTEND;VALUE=DATE:20260316
+DTSTAMP:20260820T111141Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fklubtraef-2-omraade-2-synk
+ ron-trampolin-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/klubtraef-2-omraade-2-synkro
+ n-trampolin-2/\n Tilmeldingsfrist: 3. marts 2026\n Program: https://gymdan
+ mark.dk/wp-content/uploads/2026/03/Tidsplan_KT2O2_2026.pdf\nhttps://gymdan
+ mark.dk/wp-content/uploads/2026/03/Reminder_KT2O2_2026.pdf
+LOCATION:Spar Nord Arena Slagelse (Antvorskovhallen)\, Sejerøvej 2\, 4200
+  Slagelse
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Dommerkursus
+DTSTART;VALUE=DATE:20260329
+DTEND;VALUE=DATE:20260330
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Farrangement%2Ftrampolin-dommerkursus%2F
+DESCRIPTION:https://gymdanmark.dk/arrangement/trampolin-dommerkursus/\n Ti
+ lmeldingsfrist: 17. marts 2026
+LOCATION:Strib Hallen\, Røjlemosevej 9\, 5500 Middelfart
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:EM i Trampolin og Tumbling
+DTSTART;VALUE=DATE:20260408
+DTEND;VALUE=DATE:20260413
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fem-trampolin-og-tumbling%2
+ F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/em-trampolin-og-tumbling/
+LOCATION:Portimao\, Portugal
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Klubtræf 3 område 2 – Trampolin
+DTSTART;VALUE=DATE:20260419
+DTEND;VALUE=DATE:20260420
+DTSTAMP:20260820T111141Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fklubtraef-3-omraade-2-tram
+ polin-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/klubtraef-3-omraade-2-trampo
+ lin-2/\n Tilmeldingsfrist: 7. april 2026\n Program: https://gymdanmark.dk/
+ wp-content/uploads/2026/04/Tidsplan_KT3O2_2026.pdf\nhttps://gymdanmark.dk/
+ wp-content/uploads/2026/04/Reminder_KT3O2_2026.pdf
+LOCATION:Holmeagerskolen\, Skoleholmen 15-17\, 2670 Greve
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 2
+DTSTART;VALUE=DATE:20260425
+DTEND;VALUE=DATE:20260426
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-2/\n Tilmel
+ dingsfrist: 14. april 2026\n Program: https://gymdanmark.dk/wp-content/upl
+ oads/2026/04/2026-Dan-Cup-2-Program.pdf
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Hold
+DTSTART;VALUE=DATE:20260530
+DTEND;VALUE=DATE:20260531
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-hold%2
+ F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-hold/\n 
+ Tilmeldingsfrist: 12. maj 2026\n Program: https://gymdanmark.dk/wp-content
+ /uploads/2026/05/2026-DM-hold.pdf
+LOCATION:Sundby Idrætspark hal 1\, Englandsvej 61\, 2300 København
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Boblersamling 2026 – Træner
+DTSTART;VALUE=DATE:20260620
+DTEND;VALUE=DATE:20260622
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Farrangement%2Fboblersamling-2026-traener
+ %2F
+DESCRIPTION:https://gymdanmark.dk/arrangement/boblersamling-2026-traener/ 
+ \n Tilmeldingsfrist: 6. juni 2026
+LOCATION:Femhøje Idrætscenter\, Femhøje 5\, 9800 Hjørring
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Sommerlejr 2026
+DTSTART;VALUE=DATE:20260713
+DTEND;VALUE=DATE:20260719
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fsamling%2Ftrampolin-sommerlejr-2026%2F
+DESCRIPTION:https://gymdanmark.dk/samling/trampolin-sommerlejr-2026/\n Til
+ meldingsfrist: 3. juni 2026
+LOCATION:Vestsjællands Idrætsefterskole\, Vinde Helsingevej 41\, 4281 G
+ ørlev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Træningslejr i Sverige
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260810
+DTSTAMP:20260811T000447Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fsamling%2Ftraeningslejr-i-sverige%2F
+DESCRIPTION:https://gymdanmark.dk/samling/traeningslejr-i-sverige/\n Tilme
+ ldingsfrist: 6. august 2026
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Bruttolandsholdssamling
+DTSTART;VALUE=DATE:20260822
+DTEND;VALUE=DATE:20260824
+DTSTAMP:20260818T122314Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fsamling%2Fbruttolandsholdssamling%2F
+DESCRIPTION:https://gymdanmark.dk/samling/bruttolandsholdssamling/\n Tilme
+ ldingsfrist: 22. august 2026
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:GymTræner 1 – Trampolin modul 1 – Roskilde
+DTSTART;VALUE=DATE:20260912
+DTEND;VALUE=DATE:20260914
+DTSTAMP:20260904T195828Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Farrangement%2Fgymtraener-1-trampolin-mod
+ ul-2%2F
+DESCRIPTION:https://gymdanmark.dk/arrangement/gymtraener-1-trampolin-modul
+ -2/\n Tilmeldingsfrist: 7. september 2026
+LOCATION:Idrættens Hus – Roskilde (RiBen)\, Kildegården 1\, 4000 Roski
+ lde
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Individuel
+DTSTART;VALUE=DATE:20260926
+DTEND;VALUE=DATE:20260927
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-indivi
+ duel-gymnastik%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-individu
+ el-gymnastik/\n Tilmeldingsfrist: 8. september 2026
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Synkron
+DTSTART;VALUE=DATE:20260926
+DTEND;VALUE=DATE:20260927
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-synkro
+ n-gymnastik%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-synkron-
+ gymnastik/\n Tilmeldingsfrist: 8. september 2026
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Dan Camp 2 – Lørdag
+DTSTART;VALUE=DATE:20261003
+DTEND;VALUE=DATE:20261004
+DTSTAMP:20260818T122314Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dan-camp-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dan-camp-2/\n Tilm
+ eldingsfrist: 15. september 2026
+LOCATION:Idrættens Hus – Roskilde (RiBen)\, Kildegården 1\, 4000 Roski
+ lde
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:World Cup IV – Trampolin
+DTSTART;VALUE=DATE:20261003
+DTEND;VALUE=DATE:20261005
+DTSTAMP:20260722T154628Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fworld-cup-iv-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/world-cup-iv-2/
+LOCATION:Riccione\, Italien
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Dan Camp 2 – Søndag
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261005
+DTSTAMP:20260818T122314Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dan-camp-2-soend
+ ag-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dan-camp-2-soendag
+ -2/\n Tilmeldingsfrist: 15. september 2026
+LOCATION:Idrættens Hus – Roskilde (RiBen)\, Kildegården 1\, 4000 Roski
+ lde
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Nordisk Mesterskab Trampolin
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261019
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fnordisk-mesterskab-3%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/nordisk-mesterskab-3/
+LOCATION:Uppsala\, Sverige
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 3
+DTSTART;VALUE=DATE:20261024
+DTEND;VALUE=DATE:20261025
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-3%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-3/\n Tilmel
+ dingsfrist: 15. september 2026
+LOCATION:Haslev-Hallerne\, Sofiendalsvej 42\, 4690 Haslev
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:GymTræner 1 – Trampolin Modul 2
+DTSTART;VALUE=DATE:20261121
+DTEND;VALUE=DATE:20261122
+DTSTAMP:20260830T145419Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Farrangement%2Fgymtraener-1-trampolin-mod
+ ul-2-2%2F
+DESCRIPTION:https://gymdanmark.dk/arrangement/gymtraener-1-trampolin-modul
+ -2-2/\n Tilmeldingsfrist: 12. november 2026
+LOCATION:Greve Idræts Center\, Lillevangsvej 88\, 2670 Greve
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Synkron Mix
+DTSTART;VALUE=DATE:20261128
+DTEND;VALUE=DATE:20261129
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-synkro
+ n-mix%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-synkron-
+ mix/\n Tilmeldingsfrist: 10. november 2026
+LOCATION:Odense Idrætspark\, Israels Plads 3\, 5200 Odense V
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 4 – Synkron
+DTSTART;VALUE=DATE:20261128
+DTEND;VALUE=DATE:20261129
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-4-synkron
+ %2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-4-synkron/ 
+ \n Tilmeldingsfrist: 10. november 2026
+LOCATION:Odense Idrætspark\, Israels Plads 3\, 5200 Odense V
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Klubtræf 1 område 2 – Trampolin
+DTSTART;VALUE=DATE:20261206
+DTEND;VALUE=DATE:20261207
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fklubtraef-1-omraade-2-tram
+ polin-3%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/klubtraef-1-omraade-2-trampo
+ lin-3/\n Tilmeldingsfrist: 24. november 2026
+LOCATION:Holmeagerskolen\, Skoleholmen 15-17\, 2670 Greve
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Dan Camp 1
+DTSTART;VALUE=DATE:20270130
+DTEND;VALUE=DATE:20270201
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dan-camp-1-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dan-camp-1-2/\n Ti
+ lmeldingsfrist: 12. januar 2027
+LOCATION:Femhøje Idrætscenter\, Femhøje 5\, 9800 Hjørring
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Klubtræf 2 område 2 – Synkron – Trampolin
+DTSTART;VALUE=DATE:20270207
+DTEND;VALUE=DATE:20270208
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fklubtraef-2-omraade-2-synk
+ ron-trampolin-3%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/klubtraef-2-omraade-2-synkro
+ n-trampolin-3/\n Tilmeldingsfrist: 26. januar 2027
+LOCATION:Spar Nord Arena Slagelse (Antvorskovhallen)\, Sejerøvej 2\, 4200
+  Slagelse
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 1
+DTSTART;VALUE=DATE:20270227
+DTEND;VALUE=DATE:20270228
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-1-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-1-2/\n Tilm
+ eldingsfrist: 9. februar 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Forbundsmesterskab U13\, U15 og U17 – Synkron
+DTSTART;VALUE=DATE:20270312
+DTEND;VALUE=DATE:20270314
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-forbundsmestersk
+ ab-u13-u15-og-u17-synkron-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-forbundsmesterskab
+ -u13-u15-og-u17-synkron-2/\n Tilmeldingsfrist: 23. februar 2027
+LOCATION:Vendsyssel Idrætscenter\, Stadionvej 17\, 9760 Vrå
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Forbundsmesterskab U13\, U15 og U17 – Individuel
+DTSTART;VALUE=DATE:20270312
+DTEND;VALUE=DATE:20270314
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-forbundsmestersk
+ ab-u13-u15-og-u17-individuel-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-forbundsmesterskab
+ -u13-u15-og-u17-individuel-2/\n Tilmeldingsfrist: 23. februar 2027
+LOCATION:Vendsyssel Idrætscenter\, Stadionvej 17\, 9760 Vrå
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Klubtræf 3 område 2 – Trampolin
+DTSTART;VALUE=DATE:20270418
+DTEND;VALUE=DATE:20270419
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Fklubtraef-3-omraade-2-tram
+ polin-3%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/klubtraef-3-omraade-2-trampo
+ lin-3/\n Tilmeldingsfrist: 6. april 2027
+LOCATION:Holmeagerskolen\, Skoleholmen 15-17\, 2670 Greve
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 2
+DTSTART;VALUE=DATE:20270424
+DTEND;VALUE=DATE:20270425
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-2-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-2-2/\n Tilm
+ eldingsfrist: 6. april 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Hold
+DTSTART;VALUE=DATE:20270522
+DTEND;VALUE=DATE:20270523
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-hold-2
+ %2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-hold-2/ 
+ \n Tilmeldingsfrist: 4. maj 2027
+LOCATION:Sundby Idrætspark hal 1\, Englandsvej 61\, 2300 København
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin Dan Camp 2
+DTSTART;VALUE=DATE:20270925
+DTEND;VALUE=DATE:20270927
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dan-camp-2-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dan-camp-2-2/\n Ti
+ lmeldingsfrist: 7. september 2027
+LOCATION:Idrættens Hus – Roskilde (RiBen)\, Kildegården 1\, 4000 Roski
+ lde
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 3
+DTSTART;VALUE=DATE:20271002
+DTEND;VALUE=DATE:20271003
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-3-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-3-2/\n Tilm
+ eldingsfrist: 14. september 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Synkron
+DTSTART;VALUE=DATE:20271030
+DTEND;VALUE=DATE:20271031
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-synkro
+ n-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-synkron-
+ 2/\n Tilmeldingsfrist: 12. oktober 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Individuel
+DTSTART;VALUE=DATE:20271030
+DTEND;VALUE=DATE:20271031
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-indivi
+ duel-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-individu
+ el-2/\n Tilmeldingsfrist: 12. oktober 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DanCup 4 – Synkron
+DTSTART;VALUE=DATE:20271204
+DTEND;VALUE=DATE:20271205
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dancup-4-synkron
+ -2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dancup-4-synkron-2
+ /\n Tilmeldingsfrist: 17. november 2026
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Trampolin DM Senior – Synkron Mix
+DTSTART;VALUE=DATE:20271204
+DTEND;VALUE=DATE:20271205
+DTSTAMP:20260614T144333Z
+UID:https%3A%2F%2Fgymdanmark.dk%2Fkonkurrence%2Ftrampolin-dm-senior-synkro
+ n-mix-2%2F
+DESCRIPTION:https://gymdanmark.dk/konkurrence/trampolin-dm-senior-synkron-
+ mix-2/\n Tilmeldingsfrist: 16. november 2027
+LOCATION:Oplyses senere\, Oplyses senere\, Oplyses senere
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Forårsopvisning
+DTSTART;VALUE=DATE:20270411
+DTEND;VALUE=DATE:20270412
+DTSTAMP:20260818T122314Z
+UID:For%C3%A5rsopvisning_2027-04-11
+LOCATION:Greve Idrætscenter\, Lillevangsvej 88\, 2670 Greve
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Frivolten Cup
+DTSTART;VALUE=DATE:20270507
+DTEND;VALUE=DATE:20270509
+DTSTAMP:20260818T122314Z
+UID:https%3A%2F%2Fcup.frivolten.com%2F
+DESCRIPTION:https://cup.frivolten.com/
+LOCATION:Herrljunga Sim & Idrottshall
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Instruktørmøde
+DTSTART:20260827T160000Z
+DTEND:20260827T190000Z
+DTSTAMP:20260818T122314Z
+UID:Instrukt%C3%B8rm%C3%B8de_2026-08-27T16%3A00%3A00%2B00%3A00
+LOCATION:Greveager 9\, 2670 Greve
+END:VEVENT
+END:VCALENDAR

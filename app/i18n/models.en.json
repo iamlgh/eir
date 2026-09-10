@@ -1,0 +1,8 @@
+{
+  "started": "Started",
+  "progressions_started": "Progressions started",
+  "progressions_complete": "Progressions complete, skill not",
+  "complete_to_mat": "Skill complete to mat",
+  "mastered": "Skill mastered (competition ready)",
+  "not_started": "Not started"
+}

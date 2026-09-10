@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.team_checkin_title') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <script>
+        function member_clicked(id, relation_type, list_id) {
+            var data = {
+                afkrydsningsliste: list_id,
+                relation_type: relation_type,
+                medlem: id,
+                tjek: $('#ci_' + id).prop('checked')
+            };
+
+            const url = '{{ url_for("boxcheck") }}'; // Flask will replace this with the actual URL
+            $.post(url, data, function (response) {
+                // This ONLY runs if the server is reached and responds with a 2xx status
+                if (response !== 'success') {
+                    alert('Error: check-in not saved.');
+                }
+            })
+            .fail(function (xhr, status, error) {
+                // This runs if there is no internet, a timeout, or a server error
+                console.error("Connection error: " + error);
+                alert("Connection error: There was no internet, a timeout, or a server error.");
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="menu-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message | safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2>{{ t('app.specific_team_checkin', team=team) }}</h2>
+        <div class="menu-container">
+            <label for="selected-date">{{ t('app.select_date_') }}</label>
+            <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}"
+                   onchange="window.location.href = '{{ url_for('checkin_team', team_name=team, date='PLACEHOLDER', user=user) }}'.replace('PLACEHOLDER', this.value)" />
+            <hr>
+            <div id="script-content">
+                {{ content | safe }}
+            </div>
+        </div>
+        <a href="{{ url_for('checkin_menu', user=user) }}" class="btn">{{ t('app.back_to_checkin_menu') }}</a>
+        <a href="{{ url_for('signouts_menu', user=user) }}" class="btn">{{ t('app.view_team_signouts') }}</a>
+        <a href="{{ url_for('main_menu', user=user) }}" class="btn">{{ t('app.main_menu') }}</a>
+        <a href="{{ url_for('logout_c') }}" class="btn-red">{{ t('app.log_out') }}</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.view_team_signouts') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+    <script>
+        function goTo(menu, team, user) {
+            const selectedDate = document.getElementById('selected-date').value;
+            const encodedTeam = encodeURIComponent(team);
+            // URL format: /signouts/TeamName/2026-04-10/user
+            window.location.href = `/${menu}/${encodedTeam}/${selectedDate}/${user}`;
+        }
+    </script>
+</head>
+<body class="center-it">
+    <div class="menu-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message | safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2>{{ t('app.view_team_signouts') }}</h2>
+        <div class="menu-container">
+            <label for="selected-date">{{ t('app.select_date_') }}</label>
+            <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}" />
+            <hr />
+            <label for="team">{{ t('app.select_team') }}</label>
+            {% for team_name in teams %}
+            <button type="button" onclick="goTo('signouts', '{{ team_name }}', '{{ user }}')" class="btn">
+                {{ team_name }}
+            </button>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('checkin_menu', user=user) }}" class="btn">{{ t('app.checkin_menu') }}</a>
+        <a href="{{ url_for('main_menu', user=user) }}" class="btn">{{ t('app.back_to_main_menu') }}</a>
+        <a href="{{ url_for('logout_c') }}" class="btn-red">{{ t('app.log_out') }}</a>
+    </div>
+</body>
+</html>

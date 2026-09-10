@@ -1,0 +1,143 @@
+/* member blue - background: #5b8dbf */
+/* member login yellow - background: #e1ae37 */
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+p, a {
+    overflow-wrap: anywhere;
+}
+
+.center-it {
+    font-family: sans-serif;
+    padding: 40px;
+    text-align: center;
+}
+
+.login-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.menu-container {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.btn {
+    display: block;
+    width: 100%; /* Forces the button to fill the container */
+    box-sizing: border-box; /* Ensures padding doesn't push it out of the box */
+    margin: 10px 0; /* Vertical margin 10px, horizontal 0 */
+    padding: 10px;
+    background: #79b025;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    border: none; /* Removes default button border */
+    cursor: pointer; /* Makes it feel like a link/button on hover */
+}
+
+.btn-red {
+    display: block;
+    width: 100%; /* Forces the button to fill the container */
+    box-sizing: border-box; /* Ensures padding doesn't push it out of the box */
+    margin: 10px 0; /* Vertical margin 10px, horizontal 0 */
+    padding: 10px;
+    background: red;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    border: none; /* Removes default button border */
+    cursor: pointer; /* Makes it feel like a link/button on hover */
+}
+
+.btn-orange {
+    display: block;
+    width: 100%; /* Forces the button to fill the container */
+    box-sizing: border-box; /* Ensures padding doesn't push it out of the box */
+    margin: 10px 0; /* Vertical margin 10px, horizontal 0 */
+    padding: 10px;
+    background: #e57416;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    border: none; /* Removes default button border */
+    cursor: pointer; /* Makes it feel like a link/button on hover */
+}
+
+
+/* General styling for all alerts */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Red for errors/danger */
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Green for success */
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* Blue for info */
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    padding: 0.25em 0.5em;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 0.25em;
+    white-space: nowrap;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 100%;
+    transition-property: visibility;
+    transition-delay: 0s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    transition-delay: 0.3s;
+}
+
+/* Fix: due to a Chromium change, the 42px width in the page needs to be narrowed
+    to prevent the select from showing the - from the text behind the select arrow */
+select#mobil_land {
+    width: 38px !important;
+}

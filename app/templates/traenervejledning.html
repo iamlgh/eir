@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trænervejledning — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>Trænervejledning &ndash; Eir</h1>
+        <p class="updated">Sidste opdateret: 8. august 2026</p>
+
+        <h2>Hvad er Eir?</h2>
+        <p class="intro">Eir er et værktøj bygget oven på Conventus. Man har adgang til de følgende funktioner:</p>
+        <ul>
+            <li>Hold Afkrydsning &ndash; Man har mulighed for at afkrydse medlemmer på flere tilknyttede hold på en gang, f.eks. hvis to hold mødes samtidigt.</li>
+            <li>Vis holdafmeldinger &ndash; Se afmeldte medlemmer på dine hold.</li>
+            <li>Holdopdateringer &ndash; Se tilmeldte og frameldte medlemmer på dine hold.</li>
+            <li>Notifikationer &ndash; konfigurere Telegram-notifikationer.</li>
+        </ul>
+
+        <h2>Hvordan får man adgang til Eir?</h2>
+        <p>Som træner i et Trampolingymnastik hold på Greve Gymnastik og Trampolin, har du adgang til Eir gennem din Conventus-konto. Fra dette link: <a href="https://eir-qkcv.onrender.com/coach">https://eir-qkcv.onrender.com/coach</a>.</p>
+
+        <h2>Eir login</h2>
+        <p>Login giver adgang til Eirs funktioner.</p>
+        <p>Vælg <b>Mobil</b> eller <b>E-mail</b> og brug din Conventus login for adgang til Eir.</p>
+        <img src="{{url_for('static', filename='images/traenerlogin.png')}}" alt="Eir trænerlogin" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+        <p>Eir gemmer <strong>ikke</strong> dit login eller andre personlige oplysninger fra din Conventus-konto. Din konto er brugt til at hente din hold information fra Conventus. Hver afmelding, der gemmes i Eirs database, bruger kun dit medlems-ID, hold-ID og de oplysninger, du har angivet ved afmeldingen. Eir modtager dit fornavn og efternavn fra Conventus for at personliggøre hovedmenuen. Når et login er gennemført, gemmes dit navn og holdoplysninger kun i din browser som en krypteret cookie.</p>
+
+        <h2>Eir hovedmenu</h2>
+        <p>Efter login får du adgang til Eirs hovedmenu, hvor du kan se dine aktuelle funktioner.</p>
+        <img src="{{url_for('static', filename='images/hovedmenu.png')}}" alt="Eir hovedmenu page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+        <h2>Eir notifikationer</h2>
+        <p>Her kan du konfigurere Telegram-notifikationer.<br />
+            OBS: Når man er Sportschef, er man automatisk tilmeldte notifikationer til alle hold, men man kan vælge kun at få notifikationer fra de hold, hvor man er træner.<br />
+            Der er konfiguration til Facebook Messenger-notifikationer, men det virker kun, hvis vi får app-godkendelse fra Meta, hvilket kræver en godkendt virksomhed og App Review.</p>
+
+        <h2>Support</h2>
+        <p>Eir er tilgængelig på dansk og engelsk, og support er tilgængelig på begge sprog.</p>
+        <p>Spørgsmål og support-anmodninger kan sendes til: <strong><span id="eir-contact"></span></strong>. Du kan også tilslutte dig vores Telegram-gruppe: <span id="eir-tg"></span></p>
+        <script>
+            const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs=";
+            const email = atob(encoded);
+            const container = document.getElementById("eir-contact");
+            container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+            const encoded_tg = "aHR0cHM6Ly90Lm1lLytpYjIyZzU2U1N1b3dNRGsw";
+            const tg = atob(encoded_tg);
+            const container_tg = document.getElementById("eir-tg");
+            container_tg.innerHTML = `<a href="${tg}" target="_blank">${tg}</a>`;
+        </script>
+    </div>
+</body>
+</html>

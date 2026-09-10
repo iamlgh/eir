@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.member_updates') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="menu-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message | safe }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2>{{ t('app.member_updates') }}</h2>
+        <div id="script-content">
+            {{ content | safe }}
+        </div>
+        <hr>
+        <div class="menu-container">
+            <a href="{{ url_for('main_menu', user=user) }}" class="btn">{{ t('app.back_to_main_menu') }}</a>
+            <a href="{{ url_for('checkin_menu', user=user) }}" class="btn">{{ t('app.checkin_menu') }}</a>
+            <a href="{{ url_for('signouts_menu', user=user) }}" class="btn">{{ t('app.view_team_signouts') }}</a>
+            {% if trampoline %}
+            <a href="{{ url_for('trampolinists', user=user) }}" class="btn">{{ t('app.trampolinist_skills') }}</a>
+            <a href="{{ url_for('trampolinist_admin', user=user) }}" class="btn">{{ t('app.trampolinist_admin') }}</a>
+            {% endif %}
+            <a href="{{ url_for('logout_c') }}" class="btn-red">{{ t('app.log_out') }}</a>
+        </div>
+    </div>
+</body>
+</html>

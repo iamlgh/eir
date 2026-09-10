@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy &ndash; Eir</h1>
+        <p class="updated">Last updated: August 3, 2026</p>
+
+        <p class="intro">Eir is a tool used by coaches at Greve Gymnastik og Trampolin (GGT) to manage team check-ins, sign-outs, and related club administration. This policy explains what information Eir collects, how it is used, and how you can contact us with questions.</p>
+
+        <h2>Information We Collect</h2>
+        <p>Eir collects and stores the following information in connection with its Facebook Messenger notification feature:</p>
+        <ul>
+            <li><strong>Facebook Page-Scoped ID (PSID):</strong> a unique identifier assigned by Facebook that allows Eir to send you a Messenger notification. This ID is specific to the Eir Facebook Page and cannot be used to identify you outside of it.</li>
+            <li><strong>Coach username and club ID:</strong> internal identifiers linked to your Conventus club management account, used to associate your Messenger notifications with the correct coach and club.</li>
+        </ul>
+        <p>Eir does <strong>not</strong> store your name, profile picture, or email address from Facebook. When you link your Messenger account, Eir briefly receives your first name and last name from Facebook in order to personalize the one-time linking messages (for example, addressing you by name to confirm the link succeeded). This information is used only at that moment and is not saved to Eir's database, and is not used in any later notifications. Eir does not currently store your locale/language preference, though this may be added in the future to support notifications in your preferred language (Danish or English).</p>
+
+        <h2>How We Use This Information</h2>
+        <p>The information above is used solely to:</p>
+        <ul>
+            <li>Send you Messenger notifications about sign-outs, sign-ups, or other team activity relevant to your role as a coach.</li>
+            <li>Associate those notifications with the correct team and club, using data already present in Conventus.</li>
+        </ul>
+        <p>We do not use this information for advertising, marketing, or any purpose unrelated to these notifications.</p>
+
+        <h2>How We Store This Information</h2>
+        <p>Data is stored in a MongoDB Atlas database. Access to this database is restricted, and it is not shared publicly.</p>
+
+        <h2>Third Parties</h2>
+        <p>Eir sends messages via the Facebook Messenger API. No information is shared with any other third party. Eir separately retrieves club and team data from Conventus (a club management platform used by GGT); this data exchange does not involve your Facebook PSID.</p>
+
+        <h2>Data Retention and Deletion</h2>
+        <p>Your PSID is retained for as long as your Messenger account is linked in Eir. You have two ways to manage this:</p>
+        <ul>
+            <li><strong>Pause notifications:</strong> you can remove all teams from your Facebook notification settings in Eir at any time. This stops notifications without deleting your Messenger link, so you can re-enable notifications later without linking again.</li>
+            <li><strong>Fully unlink:</strong> you can unlink your Messenger account at any time from the Facebook notification setup page in Eir. Unlinking immediately deletes all stored data associated with that link, including your PSID and team notification settings. A coach can only have one linked Messenger account for GGT in Eir at a time; linking again after unlinking requires completing the verification process described above.</li>
+        </ul>
+        <p>If you have any other question about your data, contact us using the information below.</p>
+
+        <h2>Children's Privacy</h2>
+        <p>Eir is intended for use by coaches, club administrators, and club members (or their parents). It is not directed at children. The Messenger integration does not read or process free-form messages — it only recognizes the exact phrase "link Eir" to begin the linking process and the 6-digit verification code sent back to confirm it. Any other message sent to the Eir Facebook Page is not read or stored. As a result, there is no mechanism within the Messenger integration for submitting personal information about minors or anyone else.</p>
+
+        <h2>Changes to This Policy</h2>
+        <p>If how Eir collects or uses information changes, this page will be updated, and the "Last updated" date above will reflect the most recent revision.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about this privacy policy or your data can be sent to: <strong><span id="privacy-contact"></span></strong></p>
+        <script>
+            // Decodes "privacy@yourdomain.com" dynamically on page load
+            const encoded = "ZWlyLXByaXZhY3lAYW1lcmljYWtlcy5kaw==";
+            const email = atob(encoded);
+            const container = document.getElementById("privacy-contact");
+            container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+        </script>
+    </div>
+</body>
+</html>

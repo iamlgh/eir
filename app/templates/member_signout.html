@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.member_signoutin_title') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+    <!--<script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>-->
+    <script>
+        const member_id = '{{ member_id }}'
+        $(document).ready(function(){
+            $("#signout-button").click(function () {
+                const form = document.getElementById("signout-form");
+
+                // trigger browser validation (shows tooltips if required fields are empty)
+                if (!form.reportValidity()) {
+                    return; // Stop execution if any required field is invalid
+                }
+
+                // proceed with POST request if valid
+                const $button = $(this);
+                $button.prop("disabled", true);
+                $.post("{{ url_for('signout_go') }}",
+                {
+                    date: $("#selected-date").val(),
+                    member_id: member_id,
+                    team_id: $("#team_id").val(),
+                    reason: $("#reason").val(),
+                    additional_reason: $("#additional_reason").val(),
+                },
+                function () {
+                    location.reload();
+                }).fail(function () {
+                    // Re-enable button if the POST fails so the user can retry
+                    $button.prop("disabled", false);
+                });
+            });
+
+            $("#signin-button").click(function () {
+                const $button = $(this);
+                $button.prop("disabled", true);
+                $.post("{{ url_for('signin_go') }}",
+                {
+                    signout_id: $("#existing_signouts").val()
+                },
+                function () {
+                    location.reload();
+                }).fail(function () {
+                    // Re-enable button if the POST fails so the user can retry
+                    $button.prop("disabled", false);
+                });
+            });
+        });
+    </script>
+</head>
+<body class="center-it">
+    <div class="menu-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2>{{ t('app.member_signoutin_title') }}</h2>
+        <div class="menu-container">
+            <h3>{{ t('app.member_signout_subtitle') }}</h3>
+            <hr />
+            <form id="signout-form">
+                <label for="selected-date">{{ t('app.select_date_') }}</label>
+                <!--<input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}" />-->
+                <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}"
+                       onchange="window.location.href = '{{ url_for('member_signout', date='PLACEHOLDER', member_id=member_id) }}'.replace('PLACEHOLDER', this.value)" />
+                <br /><br />
+                <!--Select team-->
+                <div id="signout-select">
+                    {{ content | safe }}
+                </div>
+                <script>
+                    document.getElementById('selected-date').setAttribute('min', '{{ current_date }}');
+                </script>
+            </form>
+        </div>
+        {% if content_in %}
+        <div class="menu-container">
+            <h3>{{ t('app.member_signup_subtitle') }}</h3>
+            <hr />
+            <form id="signup-form">
+                <!--Select signout to retract or special sign-in-->
+                <div id="signup-select">
+                    {{ content_in | safe }}
+                </div>
+                <script>
+                    document.getElementById('selected-date').setAttribute('min', '{{ current_date }}');
+                </script>
+            </form>
+        </div>
+        {% endif %}
+        <!--Back to main menu-->
+        <a href="{{ url_for('member_menu') }}" class="btn">{{ t('app.main_menu') }}</a>
+        <!--<a href="{{ url_for('logout_m') }}" class="btn-red">{{ t('app.log_out') }}</a>-->
+    </div>
+</body>
+</html>

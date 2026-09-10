@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>Eir</h1>
+        <p class="updated">Last updated: August 25, 2026</p>
+
+        <p class="intro">Eir is a tool used by coaches at Greve Gymnastik og Trampolin (GGT) to manage team check-ins, sign-outs, and related team administration.</p>
+
+        <h3>Choose your login</h3>
+        <p><a href="{{ url_for('login_c') }}" type="submit">{{ t('app.coach_login_title') }}</a></p>
+        <p><a href="{{ url_for('login_m') }}" type="submit">{{ t('app.member_login') }}</a></p>
+    </div>
+    <footer class="container">
+        <hr />
+        <p>Owner: Lisa Gay Hansen
+        <br />Contact: <strong><span id="contact"></span></strong>
+        <br /><a href="{{ url_for('privacy_policy') }}">Privacy policy</a></p>
+        <script>
+            // Decodes "privacy@yourdomain.com" dynamically on page load
+            const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs="; 
+            const email = atob(encoded);
+            const container = document.getElementById("contact");
+            container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+        </script>
+    </footer>
+
+</body>
+</html>
