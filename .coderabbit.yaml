@@ -29,7 +29,6 @@ reviews:
       - "!logs/**"
       - "!*.md" # Ignores markdown files
   path_instructions:
-  path_instructions:
     # --- Jinja2 & HTML Templates ---
     - path: "**/templates/**/*.html"
       instructions: |
