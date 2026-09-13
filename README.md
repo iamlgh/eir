@@ -13,12 +13,12 @@ This repo is a **sanitized snapshot** of an actively developed private codebase,
     - Allows for member signouts
     - Calendar with team schedule and GymDanmark Trampoline events
 - Coach features:
-    - Notifications when a member signs out of a training
-    - Check-in of multiple teams at once (i.e. when two teams meet at the same time, or their signup is split based on payment method)
-    - Checks teams for added and removed members
+    - Notifications when a member signs up or cancels for a class
+    - Checkin-in of multiple teams at once (i.e. when two teams meet at the same time, or their signup is split based on payment method)
+    - Check teams for added and removed members
+    - Calendar with schedule for all teams and GymDanmark Trampoline events
 
 ## Planned Updates
-- Add a coach-facing schedule view
 - Send notifications to coaches when a member added to or removed from a team
 - Expand notifications to allow for coach <-> parent/member messaging
 - Calendar improvements:

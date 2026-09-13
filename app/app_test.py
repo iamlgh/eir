@@ -64,7 +64,7 @@ def test_team_menu_logic(monkeypatch):
     # use freezetime so there won't be an error if the test crosses midnight
     frozen = datetime.datetime.now().strftime('%Y-%m-%d')
     with freeze_time(frozen):
-        # reference "shared.PAIRED_TEAMS" because team_menu_logic calls get_paired_name, which is imported from shared, therefore uses the PAIRED_TEAMS defined in shared
+        # reference "shared.PAIRED_TEAMS" because team_menu_logic calls get_pairing, which is imported from shared, therefore uses the PAIRED_TEAMS defined in shared
         monkeypatch.setattr('shared.PAIRED_TEAMS', _fake_paired_teams)
 
         with app.test_request_context():

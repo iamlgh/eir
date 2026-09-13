@@ -184,7 +184,7 @@ BEGIN:VEVENT
 SUMMARY:GymTræner 1 – Trampolin modul 1 – Roskilde
 DTSTART;VALUE=DATE:20260912
 DTEND;VALUE=DATE:20260914
-DTSTAMP:20260904T195828Z
+DTSTAMP:20260911T160914Z
 UID:https%3A%2F%2Fgymdanmark.dk%2Farrangement%2Fgymtraener-1-trampolin-mod
  ul-2%2F
 DESCRIPTION:https://gymdanmark.dk/arrangement/gymtraener-1-trampolin-modul

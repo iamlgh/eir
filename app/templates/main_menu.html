@@ -30,6 +30,7 @@
         <p>{{ t('app.what_to_do') }}</p>
         <hr>
         <div class="menu-container">
+            <a href="{{ url_for('calendar', type='coach') }}" class="btn">{{ t('app.calendar') }}</a>
             <a href="{{ url_for('checkin_menu', user=user) }}" class="btn">{{ t('app.checkin_menu') }}</a>
             <a href="{{ url_for('signouts_menu', user=user) }}" class="btn">{{ t('app.view_team_signouts') }}</a>
             <a href="{{ url_for('member_updates', user=user) }}" class="btn tooltip">{{ t('app.view_member_updates') }}<span class="tooltiptext">{{ t('app.view_member_updates_tooltip') }}</span></a>

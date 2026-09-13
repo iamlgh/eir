@@ -22,7 +22,7 @@
         <h2>{{ t('app.welcome', user=name) }}</h2>
         <p>{{ t('app.what_to_do') }}</p>
         <hr>
-        <a href="{{ url_for('member_calendar') }}" class="btn">{{ t('app.calendar') }}</a>
+        <a href="{{ url_for('calendar') }}" class="btn">{{ t('app.calendar') }}</a>
         <a href="{{ url_for('member_signout', member_id=member_id, date=date) }}" class="btn">{{ t('app.member_signoutin_title') }}</a>
         {% if switchable %}
         <a href="{{ url_for('member_profile_select', member_id=member_id) }}" class="btn">{{ t('app.switch_profiles') }}</a>
