@@ -69,7 +69,7 @@ class LoginResultBase(TypedDict):
 
 class LoginResult(LoginResultBase, total=False):
     cookies: RequestsCookieJar
-    login_page: bytes
+    home_page: bytes
 
 
 class PairedTeam(TypedDict):
@@ -215,7 +215,7 @@ def current_season():
     return f'{current_year}/{current_year + 1}' if date.today().month >= 9 else f'{current_year - 1}/{current_year}'
 
 
-def get_paired_name(team: TeamData, paired_teams: list[PairedTeam] | None = None) -> str | None:
+def get_pairing(team: TeamData, paired_teams: list[PairedTeam] | None = None) -> str | None:
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database
@@ -232,10 +232,10 @@ def get_paired_team_ids(paired_name, paired_teams: list[PairedTeam] | None = Non
     for pair in paired_teams:
         if paired_name == pair['name']:
             return ','.join(t['id'] for t in pair['teams'])
-    return None  # if no pair found, return the original team dict
+    return None  # if no pair found, return None
 
 
-def get_paired_name_from_team_id(team_id: str, paired_teams: list[PairedTeam] | None = None) -> str | None:
+def get_pairing_from_team_id(team_id: str, paired_teams: list[PairedTeam] | None = None) -> str | None:
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database

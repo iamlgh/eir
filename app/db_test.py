@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # -*- coding: UTF-8 -*-
 
-
+import argparse
 from datetime import datetime, UTC, date, timedelta, timezone
 from db import (
     get_signout_list_from_db,
@@ -20,6 +20,7 @@ from db import (
 )
 from dotenv import load_dotenv
 from exceptions import DatabaseError
+from freezegun import freeze_time
 import logging
 from models import (
     Signout,
@@ -32,6 +33,7 @@ from mongoengine import disconnect, QuerySet
 import os
 from pymongo.errors import ServerSelectionTimeoutError  # , ConnectionFailure
 import pytest
+from shared import configure_local_logger
 from trace_logging import TraceLogger
 from unittest.mock import MagicMock, patch
 
@@ -214,32 +216,31 @@ def test_get_fb_notifications():
 @pytest.mark.skipif(
     not os.environ.get('RUN_LIVE_TESTS'),
     reason='Set RUN_LIVE_TESTS=1 to run this live demo readiness test locally'
-    if 'mongodb.net' in os.environ.get('MONGO_URI')
+    if 'mongodb.net' in os.environ.get('MONGO_URI', '')
     else 'Set RUN_LIVE_TESTS=1 to run this live smoke test, set MONGO_URI to the production db to run this as a demo readiness test',
 )
 def test_get_signout_by_id():
     doc_id = '6a3506a32cd6a8099b7401cf'
-    if 'mongodb.net' in os.environ.get('MONGO_URI'):
+    if 'mongodb.net' in os.environ.get('MONGO_URI', ''):
         doc_id = '6a3385aade832f9e3a3f6ccf'
     logger.debug(f'Querying {doc_id}')
-    # print(f'Querying {doc_id}')
     result = get_signout_by_id(doc_id)
     for so in result:
         assert isinstance(so, Signout)
         so.date = so.date.strftime('%Y-%m-%d')
-        # print(f'Found signout: {so.member_id} signed out on {so.date} for reason: {so.reason}')
+        logger.debug(f'Found signout: {so.member_id} signed out on {so.date} for reason: {so.reason}')
     assert len(result) == 1
 
 
 @pytest.mark.skipif(
     not os.environ.get('RUN_LIVE_TESTS'),
     reason='Set RUN_LIVE_TESTS=1 to run this live demo readiness test locally'
-    if 'mongodb.net' in os.environ.get('MONGO_URI')
+    if 'mongodb.net' in os.environ.get('MONGO_URI', '')
     else 'Set RUN_LIVE_TESTS=1 to run this live smoke test, set MONGO_URI to the production db to run this as a demo readiness test',
 )
 def test_update_signout_by_id_sign_in():
     doc_id = '6a3506a32cd6a8099b7401cf'
-    if 'mongodb.net' in os.environ.get('MONGO_URI'):
+    if 'mongodb.net' in os.environ.get('MONGO_URI', ''):
         doc_id = '6a3385aade832f9e3a3f6ccf'
     logger.debug(f'querying {doc_id}')
     result = update_signout_by_id(doc_id)
@@ -250,12 +251,12 @@ def test_update_signout_by_id_sign_in():
 @pytest.mark.skipif(
     not os.environ.get('RUN_LIVE_TESTS'),
     reason='Set RUN_LIVE_TESTS=1 to run this live demo readiness test locally'
-    if 'mongodb.net' in os.environ.get('MONGO_URI')
+    if 'mongodb.net' in os.environ.get('MONGO_URI', '')
     else 'Set RUN_LIVE_TESTS=1 to run this live smoke test, set MONGO_URI to the production db to run this as a demo readiness test',
 )
 def test_update_signout_by_id_sign_out_live():
     doc_id = '6a3506a32cd6a8099b7401cf'
-    if 'mongodb.net' in os.environ.get('MONGO_URI'):
+    if 'mongodb.net' in os.environ.get('MONGO_URI', ''):
         doc_id = '6a3385aade832f9e3a3f6ccf'
     logger.debug(f'Querying {doc_id}')
     result = update_signout_by_id(doc_id, 'test', True, 'other: dovenskab')
@@ -312,7 +313,8 @@ def test_get_coaches_to_notify_no_coaches():
     # Ensure there are no notifications for a specific team
     Notification.objects(team_ids__contains='team09').delete()
     coaches: QuerySet | None = get_coaches_to_notify('team09')
-    assert coaches.count() == 0
+    assert (coaches.count() if coaches else 0) == 0
+    assert coaches.count() == 0  # type: ignore[union-attr]
 
 
 def test_save_pending_link_fb():
@@ -366,7 +368,7 @@ def test_update_teams_for_fb_notifications():
     updated_doc: dict = update_teams_for_fb_notifications(username, club_id, new_team_ids)
     assert isinstance(updated_doc, dict)
     assert updated_doc['team_ids'] == new_team_ids
-    assert test_notification.delete() is None
+    assert (test_notification.delete() if test_notification else None) is None
 
 
 def test_update_teams_raises_when_no_match():
@@ -393,7 +395,7 @@ def test_get_team_info_from_db():
             team_info.save()
         assert team_info.schedule == [{'day': 6, 'time': '11:00-12:00', 'place': 'GIC hal 4', 'weeks': 'odd'}]
     ref = 'Hold 65'
-    teams: QuerySet[Team] = Team.objects(ref=ref)
+    teams = Team.objects(ref=ref)
     for team_info in teams:
         assert isinstance(team_info, Team)
         assert team_info.ref == 'Hold 65'
@@ -401,3 +403,76 @@ def test_get_team_info_from_db():
             team_info.schedule = [{'day': 6, 'time': '12:00-13:00', 'place': 'GIC hal 4', 'weeks': 'odd'}]
             team_info.save()
         assert team_info.schedule == [{'day': 6, 'time': '12:00-13:00', 'place': 'GIC hal 4', 'weeks': 'odd'}]
+
+
+def test_save_pending_link_blocks_after_limit():
+    sid, service = 'test-sid-1', 'telegram'
+    PendingLink.objects(sid=sid, service=service).delete()  # clean slate
+
+    for i in range(3):
+        code = save_pending_link(sid, f'{i}00000', f'name{i}', service)
+        assert code == f'{i}00000'
+
+    assert PendingLink.objects(sid=sid, service=service).count() == 3
+
+    result = save_pending_link(sid, '999999', 'blocked-name', service)
+    assert result == 'app.try_again_later'
+
+    # confirm the 4th attempt didn't persist
+    assert PendingLink.objects(sid=sid, service=service).count() == 3
+
+    PendingLink.objects(sid=sid, service=service).delete()  # cleanup
+
+
+def test_save_pending_link_allows_again_after_oldest_expires():
+    sid, service = 'test-sid-2', 'telegram'
+    PendingLink.objects(sid=sid, service=service).delete()
+
+    frozen_start = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+
+    with freeze_time(frozen_start - timedelta(minutes=11)):
+        save_pending_link(sid, '111111', 'oldest', service)
+
+    with freeze_time(frozen_start):
+        save_pending_link(sid, '222222', 'second', service)
+        save_pending_link(sid, '333333', 'third', service)
+
+        # simulate what MongoDB's TTL reaper would eventually do
+        expired_cutoff = frozen_start - timedelta(seconds=600)
+        PendingLink.objects(sid=sid, service=service, created_at__lte=expired_cutoff).delete()
+
+        assert PendingLink.objects(sid=sid, service=service).count() == 2
+
+        code = save_pending_link(sid, '444444', 'fourth', service)
+        assert code == '444444'
+        assert PendingLink.objects(sid=sid, service=service).count() == 3
+
+    PendingLink.objects(sid=sid, service=service).delete()  # cleanup
+
+
+def test_save_pending_link_limit_is_scoped_per_sid_and_service():
+    PendingLink.objects(sid='test-sid-3').delete()
+    PendingLink.objects(sid='test-sid-4').delete()
+
+    for i in range(3):
+        save_pending_link('test-sid-3', f'{i}11111', 'name', 'telegram')
+
+    result = save_pending_link('test-sid-3', '999999', 'name', 'telegram')
+    assert result == 'app.try_again_later'
+
+    code = save_pending_link('test-sid-4', '555555', 'name', 'telegram')
+    assert code == '555555'
+
+    code = save_pending_link('test-sid-3', '666666', 'name', 'facebook')
+    assert code == '666666'
+
+    PendingLink.objects(sid='test-sid-3').delete()
+    PendingLink.objects(sid='test-sid-4').delete()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--debug', action='store_true', help='enable debug logging')
+    parser.add_argument('--trace', action='store_true', help='enable trace logging')
+    args = parser.parse_args()
+    configure_local_logger(debug=args.debug, trace=args.trace)

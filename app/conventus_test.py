@@ -136,6 +136,10 @@ def test_extract_teams():
     assert extract_teams(team_tds) == expected
 
 
+def test_get_member_profiles():
+    pass
+
+
 def test_parse_member_profile():
     content = """
     <table id="roottable">

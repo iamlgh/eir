@@ -3,7 +3,7 @@
 # import logging
 from datetime import date
 from freezegun import freeze_time
-from shared import current_season, get_paired_name, get_paired_team_ids, get_paired_name_from_team_id, PairedTeam, TeamData, PAIRED_TEAMS
+from shared import current_season, get_pairing, get_paired_team_ids, get_pairing_from_team_id, PairedTeam, TeamData, PAIRED_TEAMS
 
 
 @freeze_time('2026-09-01')
@@ -39,16 +39,16 @@ def test_current_season():
     assert current_season() == expected
 
 
-def test_get_paired_name():
+def test_get_pairing():
     paired_teams: list[PairedTeam] = [{'name': 'Team 1 & 2', 'teams': [{'ref': 'Team 1', 'id': '123456'}, {'ref': 'Team 2', 'id': '123457'}]}]
     team: TeamData = {'ref': 'Team 1', 'id': '123456'}
-    assert get_paired_name(team, paired_teams) == 'Team 1 & 2'
+    assert get_pairing(team, paired_teams) == 'Team 1 & 2'
 
 
-def test_get_paired_name_none():
+def test_get_pairing_none():
     paired_teams: list[PairedTeam] = [{'name': 'Team 1 & 2', 'teams': [{'ref': 'Team 1', 'id': '123456'}, {'ref': 'Team 2', 'id': '123457'}]}]
     team: TeamData = {'ref': 'Team 3', 'id': '1234568'}
-    assert get_paired_name(team, paired_teams) is None
+    assert get_pairing(team, paired_teams) is None
 
 
 def test_paired_teams_data_is_well_formed():
@@ -71,13 +71,13 @@ def test_get_paired_team_ids():
     assert get_paired_team_ids('Team A & B', paired_teams) is None
 
 
-def test_get_paired_name_from_team_id():
+def test_get_pairing_from_team_id():
     paired_teams: list[PairedTeam] = [{'name': 'Team 1 & 2', 'teams': [{'ref': 'Team 1', 'id': '123456'}, {'ref': 'Team 2', 'id': '123457'}]}]
     team_id: str = '123456'
-    assert get_paired_name_from_team_id(team_id, paired_teams) == 'Team 1 & 2'
+    assert get_pairing_from_team_id(team_id, paired_teams) == 'Team 1 & 2'
     team_id = '123457'
-    assert get_paired_name_from_team_id(team_id, paired_teams) == 'Team 1 & 2'
+    assert get_pairing_from_team_id(team_id, paired_teams) == 'Team 1 & 2'
     team_id = '999999'
-    assert get_paired_name_from_team_id(team_id, paired_teams) is None
+    assert get_pairing_from_team_id(team_id, paired_teams) is None
     team_id = '999999'
-    assert get_paired_name_from_team_id(team_id) is None
+    assert get_pairing_from_team_id(team_id) is None

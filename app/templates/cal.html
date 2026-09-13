@@ -131,13 +131,36 @@
                     mainMenu: {
                         text: "{{ t('app.main_menu') }}", // e.g. "Hovedmenu"
                         click: function () {
-                            window.location.href = "{{ url_for('member_menu') }}";
+                            window.location.href = "{{ main_menu }}";
+                        }
+                    },
+                    today: {
+                        initialDate: function () {
+                            // Move internal calendar state to today
+                            calendar.today();
+                        },
+                        click: function () {
+                            // Move internal calendar state to today
+                            calendar.today();
                         }
                     },
                 },
 
-                eventClick: function (info) {
-                    alert("{{ t('app.event') }}: " + info.event.title + "\n{{ t('app.place') }}: " + info.event.extendedProps.place + "\n{{ t('app.address') }}: " + info.event.extendedProps.address + "\n{{ t('app.program') }}: " + info.event.extendedProps.program + "\n{{ t('app.deadline') }}: " + info.event.extendedProps.deadline);
+                eventClick: function(info) {
+                    let text = "{{ t('app.event') }}: " + info.event.title + "\n"
+                    if (info.event.extendedProps.place) {
+                        "{{ t('app.place') }}: " + info.event.extendedProps.place + "\n"
+                    }
+                    if (info.event.extendedProps.address) {
+                        "{{ t('app.address') }}: " + info.event.extendedProps.address + "\n"
+                    }
+                    if (info.event.extendedProps.program) {
+                        "{{ t('app.program') }}: " + info.event.extendedProps.program + "\n"
+                    }
+                    if (info.event.extendedProps.deadline) {
+                        "{{ t('app.deadline') }}: " + info.event.extendedProps.deadline + "\n"
+                    }
+                    alert(text)
                 }
             });
 
