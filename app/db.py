@@ -46,7 +46,7 @@ def handle_db_errors(func):
         except ValidationError as e:
             logger.error(f'Validation error in {func.__name__}: {e}')
             raise DatabaseError(f'Invalid data: {e}')
-        except DatabaseError, ValueError:
+        except (DatabaseError, ValueError):
             raise  # don't rewrap already-handled errors, or non-DB errors
         except Exception as e:
             logger.error(f'Error in {func.__name__}: {type(e).__module__}.{type(e).__name__}: {e}')

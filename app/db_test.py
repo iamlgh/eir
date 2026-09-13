@@ -302,11 +302,14 @@ def test_get_coaches_to_notify_tg_live():
     assert isinstance(coaches, QuerySet)
     success = False
     assert len(coaches) > 0
-    for coach in coaches:
-        if coach.username == os.environ.get('ADMIN') and coach.service == 'telegram' and coach.sid:
-            success = True
-            break
-    assert success is True
+    if os.environ.get('ADMIN'):
+        for coach in coaches:
+            if coach.username == os.environ.get('ADMIN') and coach.service == 'telegram' and coach.sid:
+                success = True
+                break
+        assert success is True
+    else:
+        pytest.skip('no ADMIN to notify, test skipped')
 
 
 def test_get_coaches_to_notify_no_coaches():

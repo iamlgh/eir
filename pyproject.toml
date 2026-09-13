@@ -44,6 +44,7 @@ testpaths = [
 # Allow lines to be as long as 150 characters
 line-length = 150
 include = ["*.py"]
+target-version = "py313"
 
 [tool.ruff.format]
 # Prefer single quotes over double quotes

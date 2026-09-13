@@ -75,7 +75,7 @@ def create_app():
     else:
         app.secret_key = os.environ.get('SECRET_KEY') or 'this is a long secret key used for testing, so my session does not constantly reset'
         flask_debug = True
-        if os.environ.get('FLASK_ENV', '') == 'trace':
+        if os.environ.get('FLASK_ENV') == 'trace':
             flask_trace = True
     configure_flask_logger(debug=flask_debug, trace=flask_trace)
     logger.trace('trace logging on')
@@ -400,12 +400,12 @@ def notifications(user: str):
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def notification_update(user: str):
     logger.info('Updating notifications started')
-    service: str = request.form.get('service')
-    if service:
-        if service == 'facebook':
-            svc = 'fb'
-        elif service == 'telegram':
-            svc = 'tg'
+    service: str | None = request.form.get('service')
+    svc_map = {'facebook': 'fb', 'telegram': 'tg'}
+    svc = svc_map.get(service or '')
+    if not svc:
+        flash(i18n.t('app.error_notifications_updated', service_name=service or ''), 'danger')
+        return redirect(request.referrer or url_for('home'))
     logger.debug(f'Updating notifications for user: {user}, service: {service}, svc: {svc}')
     service_name = service.title()
     selected_team_ids: list[str] = [v for k, v in request.form.items() if k.startswith(f'{svc}_')]
@@ -1449,16 +1449,18 @@ def get_events():
             failed_teams.append(team_id)
             continue
 
-        for event in practices:
-            events_list.append(
-                {
-                    'id': event.get('id'),
-                    'title': event.get('title'),
-                    'start': event.get('start'),  # FullCalendar maps this to the grid
-                    'end': event.get('end'),
-                    'description': event.get('description', ''),
-                }
-            )
+        for practice in practices:
+            practice_event = {
+                'id': practice.get('id'),
+                'title': practice.get('title'),
+                'start': practice.get('start'),  # FullCalendar maps this to the grid
+                'end': practice.get('end'),
+                'description': practice.get('description', ''),
+                #'color': '#5b8dbf',
+            }
+            if request.args.get('type') != 'coach':
+                practice_event['url'] = url_for('member_signout', date=practice.get('start').split('T')[0])
+            events_list.append(practice_event)
     if failed_teams:
         if len(team_ids) == len(failed_teams):
             if len(team_ids) == 1:

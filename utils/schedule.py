@@ -138,7 +138,6 @@ def publish(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f'Publishing failed: An unexpected error occurred: {e}')
         logger.exception(f'Publishing failed: An unexpected error occurred: {e}')
-        sftp.close()
     finally:
         ssh.close()
     sys.exit(1)

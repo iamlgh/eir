@@ -23,12 +23,12 @@
         <p>{{ t('app.what_to_do') }}</p>
         <hr>
         <a href="{{ url_for('calendar') }}" class="btn">{{ t('app.calendar') }}</a>
-        <a href="{{ url_for('member_signout', member_id=member_id, date=date) }}" class="btn">{{ t('app.member_signoutin_title') }}</a>
+        <a href="{{ url_for('member_signout', date=date) }}" class="btn">{{ t('app.member_signoutin_title') }}</a>
         {% if switchable %}
-        <a href="{{ url_for('member_profile_select', member_id=member_id) }}" class="btn">{{ t('app.switch_profiles') }}</a>
+        <a href="{{ url_for('member_profile_select') }}" class="btn">{{ t('app.switch_profiles') }}</a>
         {% endif %}
         {% if trampolinist %}
-        <a href="{{ url_for('trampolinists', member_id=member_id, name=name) }}" class="btn">{{ t('app.view_your_skills') }}</a>
+        <a href="{{ url_for('trampolinists', name=name) }}" class="btn">{{ t('app.view_your_skills') }}</a>
         {% endif %}
         <a href="{{ url_for('logout_m') }}" class="btn-red">{{ t('app.log_out') }}</a>
     </div>

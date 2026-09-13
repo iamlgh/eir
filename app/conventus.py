@@ -1093,7 +1093,7 @@ def get_member_team_info_page(team_id, headers, cookies) -> str:
     logger.trace(cookies)
     if not response.ok or log_redirect(response):
         if response.status_code == 302:
-            #session expired
+            # session expired
             raise SessionError(f'Failed to fetch member team info page, because the Conventus session has expired: {response.status_code}')
         else:
             logger.error(f'Failed to fetch member team info page: {response.status_code}')

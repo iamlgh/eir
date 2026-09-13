@@ -84,7 +84,7 @@ def test_team_menu_logic(monkeypatch):
             assert date == frozen
 
 
-@pytest.mark.skipif(not os.environ.get('RUN_LIVE_TESTS'), reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
+@pytest.mark.skipif(os.environ.get('RUN_LIVE_TESTS') != '1', reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
 def test_send_fb_messenger_utility_message_signout_live():
     # there is a mock version of this test below
 
@@ -94,51 +94,52 @@ def test_send_fb_messenger_utility_message_signout_live():
         team_ref = 'Test team'
         date = '2026-01-01'
         da_date = date_std_to_da(date)
-        for coach in coaches:
-            if coach.username == ADMIN and coach.service == 'facebook':
-                ran_test = True
-                i18n.load_path.append(str(path_handler('i18n_path')))
-                i18n.set('file_format', 'json')
-                i18n.set('skip_locale_root_data', True)
-                i18n.set('fallback', 'en')
+        if ADMIN:
+            for coach in coaches:
+                if coach.username == ADMIN and coach.service == 'facebook':
+                    ran_test = True
+                    i18n.load_path.append(str(path_handler('i18n_path')))
+                    i18n.set('file_format', 'json')
+                    i18n.set('skip_locale_root_data', True)
+                    i18n.set('fallback', 'en')
 
-                # test English
-                comment = 'other: test comment (send_fb_utility_message)'
-                assert (
-                    send_fb_utility_message(
-                        psid=coach.sid,
-                        action='signout',
-                        name='Test User',
-                        event_type_l10n=i18n.t('app.practice', locale='en'),
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment=comment,
-                        lingua='en',
+                    # test English
+                    comment = 'other: test comment (send_fb_utility_message)'
+                    assert (
+                        send_fb_utility_message(
+                            psid=coach.sid,
+                            action='signout',
+                            name='Test User',
+                            event_type_l10n=i18n.t('app.practice', locale='en'),
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment=comment,
+                            lingua='en',
+                        )
+                        is True
                     )
-                    is True
-                )
 
-                # test Danish
-                comment = 'andet: test kommentar (send_fb_utility_message)'
-                assert (
-                    send_fb_utility_message(
-                        psid=coach.sid,
-                        action='signout',
-                        name='Test User',
-                        event_type_l10n=i18n.t('app.practice', locale='da'),
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment=comment,
-                        lingua='da',
+                    # test Danish
+                    comment = 'andet: test kommentar (send_fb_utility_message)'
+                    assert (
+                        send_fb_utility_message(
+                            psid=coach.sid,
+                            action='signout',
+                            name='Test User',
+                            event_type_l10n=i18n.t('app.practice', locale='da'),
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment=comment,
+                            lingua='da',
+                        )
+                        is True
                     )
-                    is True
-                )
 
     if not ran_test:
         pytest.skip('no coaches to notify for team, test skipped')
 
 
-@pytest.mark.skipif(not os.environ.get('RUN_LIVE_TESTS'), reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
+@pytest.mark.skipif(os.environ.get('RUN_LIVE_TESTS') != '1', reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
 def test_send_fb_messenger_utility_message_signup_live():
     ran_test = False
     coaches: QuerySet | None = get_coaches_to_notify('1040490')
@@ -146,49 +147,50 @@ def test_send_fb_messenger_utility_message_signup_live():
         team_ref = 'Test team'
         date = '2026-01-01'
         da_date = date_std_to_da(date)
-        for coach in coaches:
-            if coach.username == ADMIN and coach.service == 'facebook':
-                ran_test = True
-                i18n.load_path.append(str(path_handler('i18n_path')))
-                i18n.set('file_format', 'json')
-                i18n.set('skip_locale_root_data', True)
-                i18n.set('fallback', 'en')
+        if ADMIN:
+            for coach in coaches:
+                if coach.username == ADMIN and coach.service == 'facebook':
+                    ran_test = True
+                    i18n.load_path.append(str(path_handler('i18n_path')))
+                    i18n.set('file_format', 'json')
+                    i18n.set('skip_locale_root_data', True)
+                    i18n.set('fallback', 'en')
 
-                # test English
-                assert (
-                    send_fb_utility_message(
-                        psid=coach.sid,
-                        action='signup',
-                        name='Test User',
-                        event_type_l10n=i18n.t('app.practice', locale='en'),
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment='',
-                        lingua='en',
+                    # test English
+                    assert (
+                        send_fb_utility_message(
+                            psid=coach.sid,
+                            action='signup',
+                            name='Test User',
+                            event_type_l10n=i18n.t('app.practice', locale='en'),
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment='',
+                            lingua='en',
+                        )
+                        is True
                     )
-                    is True
-                )
 
-                # test Danish
-                assert (
-                    send_fb_utility_message(
-                        psid=coach.sid,
-                        action='signup',
-                        name='Test User',
-                        event_type_l10n=i18n.t('app.practice', locale='da'),
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment='',
-                        lingua='da',
+                    # test Danish
+                    assert (
+                        send_fb_utility_message(
+                            psid=coach.sid,
+                            action='signup',
+                            name='Test User',
+                            event_type_l10n=i18n.t('app.practice', locale='da'),
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment='',
+                            lingua='da',
+                        )
+                        is True
                     )
-                    is True
-                )
 
     if not ran_test:
         pytest.skip('no coaches to notify for team, test skipped')
 
 
-@pytest.mark.skipif(not os.environ.get('RUN_LIVE_TESTS'), reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
+@pytest.mark.skipif(os.environ.get('RUN_LIVE_TESTS') != '1', reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
 def test_notify_coach_v2_live():
     ran_test = False
     coaches: QuerySet | None = get_coaches_to_notify('1044963')
@@ -201,37 +203,38 @@ def test_notify_coach_v2_live():
         i18n.set('file_format', 'json')
         i18n.set('skip_locale_root_data', True)
         i18n.set('fallback', 'en')
-        for coach in coaches:
-            if coach.username == ADMIN:
-                comment = i18n.t('app.other', locale=coach.lingua) + ': test comment (notify_coach2)'
-                ran_test = True
-                event_type_l10n = i18n.t('app.practice', locale=coach.lingua)
-                assert (
-                    notify_coach2(
-                        coach,
-                        notification_text=i18n.t(
-                            'app.signout_notification',
+        if ADMIN:
+            for coach in coaches:
+                if coach.username == ADMIN:
+                    comment = i18n.t('app.other', locale=coach.lingua) + ': test comment (notify_coach2)'
+                    ran_test = True
+                    event_type_l10n = i18n.t('app.practice', locale=coach.lingua)
+                    assert (
+                        notify_coach2(
+                            coach,
+                            notification_text=i18n.t(
+                                'app.signout_notification',
+                                name=name,
+                                event_type=event_type_l10n,
+                                team_or_event=team_ref,
+                                date=date,
+                                comment=comment,
+                                locale=coach.lingua,
+                            ),
+                            action='signout',
                             name=name,
-                            event_type=event_type_l10n,
+                            event_type_l10n=event_type_l10n,
                             team_or_event=team_ref,
-                            date=date,
+                            date=da_date,
                             comment=comment,
-                            locale=coach.lingua,
-                        ),
-                        action='signout',
-                        name=name,
-                        event_type_l10n=event_type_l10n,
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment=comment,
+                        )
+                        == 1
                     )
-                    == 1
-                )
     if not ran_test:
         pytest.skip('no coaches to notify for team, test skipped')
 
 
-def make_mock_fb_notification(username=ADMIN, sid='fake-psid-123', club_id='662', team_ids=None, lingua='da'):
+def make_mock_fb_notification(username='the_best_coach', sid='fake-psid-123', club_id='662', team_ids=None, lingua='da'):
     return Notification(
         username=username,
         sid=sid,
@@ -295,7 +298,7 @@ def test_send_fb_messenger_utility_message_calls_api_correctly(mocker):
     # assert message text, template shape, etc.
 
 
-@pytest.mark.skipif(not os.environ.get('RUN_LIVE_TESTS'), reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
+@pytest.mark.skipif(os.environ.get('RUN_LIVE_TESTS') != '1', reason='Set RUN_LIVE_TESTS=1 to run this live smoke test locally')
 def test_send_telegram_message_live():
     # TODO there is a mock version of this test below
     from db import get_coaches_to_notify
@@ -307,48 +310,49 @@ def test_send_telegram_message_live():
         comment = 'other - test comment'
         date = '2026-01-01'
         da_date = date_std_to_da(date)
-        for coach in coaches:
-            if coach.username == ADMIN and coach.service == 'telegram':
-                ran_test = True
-                i18n.load_path.append(str(path_handler('i18n_path')))
-                i18n.set('file_format', 'json')
-                i18n.set('skip_locale_root_data', True)
-                i18n.set('fallback', 'en')
+        if ADMIN:
+            for coach in coaches:
+                if coach.username == ADMIN and coach.service == 'telegram':
+                    ran_test = True
+                    i18n.load_path.append(str(path_handler('i18n_path')))
+                    i18n.set('file_format', 'json')
+                    i18n.set('skip_locale_root_data', True)
+                    i18n.set('fallback', 'en')
 
-                # test English
-                event_type = i18n.t('app.practice', locale='en')
-                comment = 'other: test comment (send_telegram_message)'
-                r = send_telegram_message(
-                    coach.sid,
-                    i18n.t(
-                        'app.signout_notification',
-                        name='Test User',
-                        event_type=event_type,
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment=comment,
-                        locale='en',
-                    ),
-                )
-                assert r is True
+                    # test English
+                    event_type = i18n.t('app.practice', locale='en')
+                    comment = 'other: test comment (send_telegram_message)'
+                    r = send_telegram_message(
+                        coach.sid,
+                        i18n.t(
+                            'app.signout_notification',
+                            name='Test User',
+                            event_type=event_type,
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment=comment,
+                            locale='en',
+                        ),
+                    )
+                    assert r is True
 
-                # test Danish
-                event_type = i18n.t('app.practice', locale='da')
-                comment = 'andet: test kommentar (send_telegram_message)'
-                r = send_telegram_message(
-                    coach.sid,
-                    i18n.t(
-                        'app.signout_notification',
-                        name='Test User',
-                        event_type=event_type,
-                        team_or_event=team_ref,
-                        date=da_date,
-                        comment=comment,
-                        locale='da',
-                    ),
-                )
-                assert r is True
-                break
+                    # test Danish
+                    event_type = i18n.t('app.practice', locale='da')
+                    comment = 'andet: test kommentar (send_telegram_message)'
+                    r = send_telegram_message(
+                        coach.sid,
+                        i18n.t(
+                            'app.signout_notification',
+                            name='Test User',
+                            event_type=event_type,
+                            team_or_event=team_ref,
+                            date=da_date,
+                            comment=comment,
+                            locale='da',
+                        ),
+                    )
+                    assert r is True
+                    break
     if not ran_test:
         pytest.skip('no coaches to notify for team, test skipped')
 

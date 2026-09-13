@@ -102,10 +102,14 @@
                 return window.innerWidth < 768 ? '100dvh' : 'auto';
             }
 
+            let events_call = '/api/events?team_list=' + encodeURIComponent('{{ team_list }}') + '&dept=' + encodeURIComponent('{{ dept }}')
+            if (window.location.search.substr(1) == 'type=coach') {
+                events_call = events_call + '&type=coach'
+            }
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: getInitialView(),
                 height: getCalendarHeight(), // '100dvh' on mobile to fill screen, 'auto' on desktop to fit content
-                events: '/api/events?team_list=' + encodeURIComponent('{{ team_list }}') + '&dept=' + encodeURIComponent('{{ dept }}'),
+                events: events_call,
                 locale: "{{ t('app.lingua') }}",
                 firstDay: 1,
                 displayEventEnd: true,

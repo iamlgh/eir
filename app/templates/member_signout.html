@@ -76,7 +76,7 @@
                 <label for="selected-date">{{ t('app.select_date_') }}</label>
                 <!--<input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}" />-->
                 <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}"
-                       onchange="window.location.href = '{{ url_for('member_signout', date='PLACEHOLDER', member_id=member_id) }}'.replace('PLACEHOLDER', this.value)" />
+                       onchange="window.location.href = '{{ url_for('member_signout', date='PLACEHOLDER') }}'.replace('PLACEHOLDER', this.value)" />
                 <br /><br />
                 <!--Select team-->
                 <div id="signout-select">
