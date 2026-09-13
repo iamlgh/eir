@@ -1,5 +1,4 @@
 #!/usr/local/bin/python
-# -*- coding: UTF-8 -*-
 
 # from icu4py.messageformat import MessageFormat
 import i18n
@@ -29,14 +28,23 @@ CONVENTUS_DEPT_REPORT_ID = 'a_2875'  # Trampolingymnastik dept id, used for the 
 # a_<dept_id> is for querying depts (a = afdeling)
 CONVENTUS_DEPT_NAME = 'Trampolingymnastik'  # The name of the dept in Conventus
 DB_NAME = 'conventus_addons'  # the name of the MongoDB database to store the trampolinist and sign-out data for Conventus
+
+
+class TeamDataBase(TypedDict):
+    ref: str
+    id: str
+
+
+class TeamData(TeamDataBase, total=False):
+    team_name: str
+
+
+class PairedTeam(TypedDict):
+    name: str
+    teams: list[TeamData]
+
+
 PAIRED_TEAMS: list[PairedTeam] = [
-    {
-        'name': 'X25Hold 31 & 32',
-        'teams': [
-            {'team_name': 'X25Hold 31 - Trampolin - Begynder/Øvet fra skolestart til 8 år', 'ref': 'X25Hold 31', 'id': '984967'},
-            {'team_name': 'X25Hold 32 - Trampolin - Begynder/Øvet 8 år+', 'ref': 'X25Hold 32', 'id': '984969'},
-        ],
-    },
     {
         'name': 'Hold 37*',
         'teams': [
@@ -54,15 +62,6 @@ PAIRED_TEAMS: list[PairedTeam] = [
 ]
 
 
-class TeamDataBase(TypedDict):
-    ref: str
-    id: str
-
-
-class TeamData(TeamDataBase, total=False):
-    team_name: str
-
-
 class LoginResultBase(TypedDict):
     login_success: bool
 
@@ -70,11 +69,6 @@ class LoginResultBase(TypedDict):
 class LoginResult(LoginResultBase, total=False):
     cookies: RequestsCookieJar
     home_page: bytes
-
-
-class PairedTeam(TypedDict):
-    name: str
-    teams: list[TeamData]
 
 
 @dataclass(frozen=True)

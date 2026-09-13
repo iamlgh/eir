@@ -10,12 +10,11 @@ path_handler('i18n_path'), with no locale key inside the file itself
         { "success_notifications_unlinked": "Success! %{service_name} notifications have been unlinked." }
 """
 
-import json
-import re
-from pathlib import Path
-
 import i18n
+import json
+from pathlib import Path
 import pytest
+import re
 from shared import path_handler
 
 i18n.load_path.append(path_handler('i18n_path'))
@@ -73,7 +72,7 @@ def _flatten(data, prefix, locale, out):
             out[(locale, key)] = v
 
 
-def _load_locale_strings():
+def _load_locale_strings() -> dict[str, str]:
     """Returns {(locale, dotted.key): raw_string} for every string in every locale file."""
     strings = {}
     i18n_dir = Path(path_handler('i18n_path'))
@@ -90,6 +89,7 @@ def _load_locale_strings():
 
 
 ALL_STRINGS = _load_locale_strings()
+assert ALL_STRINGS, 'ALL_STRINGS should not be empty; check locale discovery.'
 
 
 @pytest.mark.parametrize(
