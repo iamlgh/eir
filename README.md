@@ -19,7 +19,7 @@ This repo is a **sanitized snapshot** of an actively developed private codebase,
     - Calendar with schedule for all teams and GymDanmark Trampoline events
 
 ## Planned Updates
-- Send notifications to coaches when a member signs up or cancels for a class
+- Send notifications to coaches when a member added to or removed from a team
 - Expand notifications to allow for coach <-> parent/member messaging
 - Calendar improvements:
     - Sign-out or sign-up directly from a calendar event
