@@ -1,6 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 
 import argparse
 from bs4 import BeautifulSoup, ResultSet, Tag  # https://pypi.org/project/beautifulsoup4/
@@ -19,6 +17,7 @@ import requests  # https://pypi.org/project/requests/
 import sys
 from time import sleep, time
 from types import SimpleNamespace
+from typing import cast
 import urllib.parse
 
 
@@ -71,7 +70,7 @@ def _configure_local_logger(debug=False) -> None:
     print(f'Log file can be found at {log_file}')
 
 
-def publish(args: list[bool]) -> None:
+def publish(args: argparse.Namespace) -> None:
     import paramiko
     import socket
 
@@ -89,7 +88,7 @@ def publish(args: list[bool]) -> None:
     elif args.skip_publish_ics:
         print('Publishing iCalendar file skipped')
 
-    files: list[dict] = []
+    files: list[dict[str, str | Path]] = []
     if not args.skip_publish_json:
         files.append(
             {
@@ -124,7 +123,7 @@ def publish(args: list[bool]) -> None:
 
         with ssh.open_sftp() as sftp:
             for file in files:
-                sftp.put(file['local'], file['remote'])
+                sftp.put(file['local'], cast(str, file['remote']))  # use cast to avoid mypy error (the type is correct but mypy can't figure it out)
                 print(f'{file["name"]} published successfully')
                 logger.info(f'{file["name"]} published successfully')
         ssh.close()
@@ -139,7 +138,6 @@ def publish(args: list[bool]) -> None:
     except Exception as e:
         print(f'Publishing failed: An unexpected error occurred: {e}')
         logger.exception(f'Publishing failed: An unexpected error occurred: {e}')
-        sftp.close()
     finally:
         ssh.close()
     sys.exit(1)

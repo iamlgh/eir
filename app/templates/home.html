@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t('app.home') }} — Eir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>Eir</h1>
+        <p class="updated">{{ t('app.last_updated_') }}
+            <span id="date"></span>
+        </p>
+        <script>
+            const langCode = "{{ t('app.lingua') }}";
+
+            async function renderBuildDate() {
+                try {
+                    //const date = new Date("2026-09-16");
+                    const jsonUrl = "{{ url_for('static', filename='build_date.json') }}";
+                    const response = await fetch(`${jsonUrl}?v=${Date.now()}`);
+                    const data = await response.json();
+                    const date = new Date(data.updatedAt);
+                    // Long date formatting (e.g. "13. september 2026")
+                    document.getElementById("date").innerText = new Intl.DateTimeFormat(langCode, {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    }).format(date);
+                } catch (error) {
+                    console.error("Failed to localize date:", error);
+                }
+            }
+            renderBuildDate();
+        </script>
+        <p class="intro">{{ t('app.intro') }}</p>
+
+        <h3>{{ t('app.choose_your_login') }}</h3>
+        <p><a href="{{ url_for('login_c') }}" type="submit">{{ t('app.coach_login_title') }}</a></p>
+        <p><a href="{{ url_for('login_m') }}" type="submit">{{ t('app.member_login') }}</a></p>
+    </div>
+    <footer class="container">
+        <hr />
+        <p>{{ t('app.owner_') }} Lisa Gay Hansen
+        <br />{{ t('app.contact_') }} <strong><span id="contact"></span></strong>
+        <br /><a href="{{ url_for('privacy_policy') }}">{{ t('app.privacy_policy') }}</a></p>
+        <script>
+            // Decodes "privacy@yourdomain.com" dynamically on page load
+            const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs=";
+            const email = atob(encoded);
+            const container = document.getElementById("contact");
+            container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+        </script>
+    </footer>
+</body>
+</html>

@@ -39,10 +39,10 @@
                 });
             });
 
-            $("#signin-button").click(function () {
+            $("#signup-button").click(function () {
                 const $button = $(this);
                 $button.prop("disabled", true);
-                $.post("{{ url_for('signin_go') }}",
+                $.post("{{ url_for('signup_go') }}",
                 {
                     signout_id: $("#existing_signouts").val()
                 },
@@ -76,7 +76,7 @@
                 <label for="selected-date">{{ t('app.select_date_') }}</label>
                 <!--<input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}" />-->
                 <input name="selected-date" id="selected-date" type="date" class="form-control" value="{{ date }}"
-                       onchange="window.location.href = '{{ url_for('member_signout', date='PLACEHOLDER', member_id=member_id) }}'.replace('PLACEHOLDER', this.value)" />
+                       onchange="window.location.href = '{{ url_for('member_signout', date='PLACEHOLDER') }}'.replace('PLACEHOLDER', this.value)" />
                 <br /><br />
                 <!--Select team-->
                 <div id="signout-select">

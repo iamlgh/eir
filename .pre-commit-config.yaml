@@ -1,8 +1,16 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.18  # pin to a specific version
+    rev: v0.15.22  # pin to a specific version
     hooks:
       - id: ruff-check #linter
         #types_or: [ python, pyi, pyproject ]
         args: [--fix] # optional: auto-fix fixable issues
       - id: ruff-format # formatter
+  - repo: local
+    hooks:
+      - id: update-build-date
+        name: Update Build Date JSON
+        entry: python utils/build_date.py
+        language: system
+        files: ^.*$
+        pass_filenames: false

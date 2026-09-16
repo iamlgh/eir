@@ -1,0 +1,56 @@
+# .coderabbit.yaml
+language: "en-US"
+reviews:
+  profile: "chill" # Options: chill, assertive
+  # Enable linters for HTML, JS, and CSS
+  tools:
+    htmlhint:
+      enabled: true
+    eslint:
+      enabled: true
+    stylelint:
+      enabled: true
+  auto_review:
+    enabled: true
+    # Use path_filters to exclude specific files or directories from AI reviews
+    path_filters:
+      - "!.mypy_cache/**"
+      - "!.pytest_cache/**"
+      - "!.ruff_cache/**"
+      - "!.ruff_cache/**"
+      - "!.sarif/**"
+      - "!.venv/**"
+      - "!.venv-wsl/**"
+      - "!.vs/**"
+      - "!.vscode/**"
+      - "!_pycache_/**"
+      - "!data/**"
+      - "!htmlcov/**"
+      - "!logs/**"
+      - "!*.md" # Ignores markdown files
+  path_instructions:
+    # --- Jinja2 & HTML Templates ---
+    - path: "**/templates/**/*.html"
+      instructions: |
+        You are reviewing Jinja2 HTML templates for a Python Flask application.
+        Check for:
+        - Correct Jinja2 block/variable syntax (e.g., {% block %}, {{ var }}).
+        - Proper path resolution via `url_for('static', filename='...')`.
+        - Security leaks, specifically improper or dangerous bypasses like `|safe`.
+
+    # --- Flask JavaScript Assets ---
+    - path: "**/static/**/*.js"
+      instructions: |
+        Review this JavaScript file within a Flask static assets context.
+        Check for:
+        - Modern ES6+ practices, avoiding global scope leakages.
+        - Proper handling of dynamically passed data from Flask (e.g., catching API endpoints or elements parsed from data attributes).
+        - DOM manipulation vulnerabilities (XSS safe practices).
+
+    # --- Flask CSS / Stylesheets ---
+    - path: "**/static/**/*.css"
+      instructions: |
+        Review this CSS asset located in the Flask static directory.
+        Check for:
+        - Clean layouts, responsive design practices, and structural formatting.
+        - Broken fallback fonts or malformed relative asset paths (like `url()`).

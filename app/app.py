@@ -2,7 +2,7 @@ import argparse
 from bs4 import ResultSet, Tag
 from datetime import datetime, timedelta, timezone, date
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify, abort
 from flask.typing import ResponseReturnValue
 from functools import wraps
 import hashlib
@@ -16,8 +16,9 @@ import re
 import requests
 import secrets
 import subprocess
+import traceback
+from werkzeug.exceptions import HTTPException, InternalServerError
 from zoneinfo import ZoneInfo
-
 
 # Import my specific functions from other scripts
 import conventus
@@ -41,8 +42,8 @@ from exceptions import DatabaseError, ParsingError, SessionError, SiteError, Not
 import models
 from shared import (
     get_paired_team_ids,
-    get_paired_name,
-    get_paired_name_from_team_id,
+    get_pairing,
+    get_pairing_from_team_id,
     path_handler,
     configure_flask_logger,
     configure_local_logger,
@@ -75,7 +76,7 @@ def create_app():
     else:
         app.secret_key = os.environ.get('SECRET_KEY') or 'this is a long secret key used for testing, so my session does not constantly reset'
         flask_debug = True
-        if os.environ.get('FLASK_ENV', '') == 'trace':
+        if os.environ.get('FLASK_ENV') == 'trace':
             flask_trace = True
     configure_flask_logger(debug=flask_debug, trace=flask_trace)
     logger.trace('trace logging on')
@@ -141,6 +142,25 @@ def require_session_keys(*keys, redirect_to='login_c'):
     return decorator
 
 
+def check_coach_environment():
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            required_vars = ['FB_APP_SECRET', 'EIR_FB_ACCESS_TOKEN', 'VERIFY_TOKEN', 'PAGE_ID', 'EIR_TELEGRAM_TOKEN']
+            missing = [var for var in required_vars if not os.environ.get(var)]
+
+            # If any vars are missing completely, fail the setup right here
+            if missing:
+                # for now a simple string is printed, later I will implement a flash and direct to a generic error page
+                return f'App will not run due to missing environment variables: {missing}', 500
+
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 @app.before_request
 def enforce_session_expiry():
     expires_at = session.get('expires_at')
@@ -152,11 +172,18 @@ def enforce_session_expiry():
             flash(i18n.t('app.session_expired'), 'danger')
 
 
+@app.route('/bad')
+def bad():
+    # Raise a raw Python exception to simulate a crash/bug
+    if os.environ.get('FLASK_ENV') == 'production' or os.environ.get('FLASK_ENV') == 'prod':
+        abort(404)
+
+    raise RuntimeError('This is a deliberate test crash -- error 500!')
+
+
 @app.route('/')
 def home():
-    if get_locale() == 'da':
-        return render_template('index_da.html')
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 @app.route('/privacypolicy')
@@ -204,6 +231,7 @@ def show_locale():
 
 
 @app.route('/coach')
+@check_coach_environment()
 def login_c():
     if session.get('PHPSESSID') and session.get('username') and session.get('teams'):
         s = set_session_cookie_for_requests()
@@ -274,9 +302,10 @@ def logout_c():
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def main_menu(user: str) -> ResponseReturnValue:
     # user can only go to their own menu, not someone else's
-    if session.get('username') != user:
+    session_username = session.get('username')
+    if session_username and session_username != user:
         flash(i18n.t('app.viewing_your_own_menu'), 'info')
-        user = session.get('username')
+        user = session_username
 
     # is there an active Conventus session?
     # make a test request to Conventus, and see if it works (e.g. by checking if the test page returned successfully
@@ -400,12 +429,12 @@ def notifications(user: str):
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def notification_update(user: str):
     logger.info('Updating notifications started')
-    service: str = request.form.get('service')
-    if service:
-        if service == 'facebook':
-            svc = 'fb'
-        elif service == 'telegram':
-            svc = 'tg'
+    service: str | None = request.form.get('service')
+    svc_map = {'facebook': 'fb', 'telegram': 'tg'}
+    svc = svc_map.get(service or '')
+    if not svc:
+        flash(i18n.t('app.error_notifications_updated', service_name=service or ''), 'danger')
+        return redirect(request.referrer or url_for('home'))
     logger.debug(f'Updating notifications for user: {user}, service: {service}, svc: {svc}')
     service_name = service.title()
     selected_team_ids: list[str] = [v for k, v in request.form.items() if k.startswith(f'{svc}_')]
@@ -558,7 +587,7 @@ def team_menu_logic() -> tuple:
     team_refs_after_pairing = []
     for t in teams:
         logger.debug(f'Processing team: {t}')
-        ref = get_paired_name(t)
+        ref = get_pairing(t)
         if ref is None:
             ref = t.get('ref')
         if ref not in team_refs_after_pairing:
@@ -1150,7 +1179,7 @@ def signout_go() -> ResponseReturnValue:
         signup.delete()  # delete existing signups so we only have one signup/out record for the event
 
     # add signout to the database
-    result: models.Signout = add_signout_to_db(
+    result: models.Signout | None = add_signout_to_db(
         request.form.get('date'),
         member_id,
         club_id,
@@ -1192,7 +1221,7 @@ def signout_go() -> ResponseReturnValue:
                 ),
                 action='signout',
                 name=name,
-                event_type=event_type_l10n,
+                event_type_l10n=event_type_l10n,
                 team_or_event=team_ref,
                 date=da_date,
                 comment=comment,
@@ -1250,10 +1279,7 @@ def signup_go() -> ResponseReturnValue:
                 notification_text=i18n.t(
                     'app.signup_notification', name=name, event_type=event_type_l10n, team_or_event=team_ref, date=da_date, locale=coach.lingua
                 ),
-                psid=coach.sid,
-                lingua=coach.lingua,
-                message_type='event',
-                action='practice',
+                action='signup',
                 name=name,
                 event_type_l10n=event_type_l10n,
                 team_or_event=team_ref,
@@ -1314,25 +1340,25 @@ def get_practices(team_id: str, request_start: datetime | None = None, request_e
     Generate a list of all practice days in the season (e.g., every Monday and Wednesday)
     if request_start and request_end dates are provided, use the intersection of season dates and date range
     """
-    tz = ZoneInfo('Europe/Copenhagen')
+    tz: ZoneInfo = ZoneInfo('Europe/Copenhagen')
     # Define the start and end dates for the season (e.g., from September 1 to May 31)
     practice_days: list[dict] = []
     team_info: models.Team | None = get_team_info_from_db(team_id=team_id)
     if team_info:
         team_start_date: datetime = team_info.start_date.replace(tzinfo=tz)
         team_end_date: datetime = team_info.end_date.replace(tzinfo=tz)
-        start_date = team_start_date
+        start_date: datetime = team_start_date
         if request_start:
             start_date = max(team_start_date, request_start)
-        end_date = team_end_date
+        end_date: datetime = team_end_date
         if request_end:
             end_date = min(team_end_date, request_end)
         cal_date: datetime = start_date
         while cal_date <= end_date:
             logger.debug(cal_date)
-            event_type_l10n = i18n.t('app.practice').title()
-            cal_weekday = cal_date.weekday()
-            iso_week = cal_date.isocalendar()[1]
+            event_type_l10n: str = i18n.t('app.practice').title()
+            cal_weekday: int = cal_date.weekday()
+            iso_week: int = cal_date.isocalendar()[1]
             if iso_week in (52, 53):
                 cal_date += timedelta(days=1)
                 continue
@@ -1340,18 +1366,19 @@ def get_practices(team_id: str, request_start: datetime | None = None, request_e
             for item in team_info.schedule:
                 if item['day'] != cal_weekday:
                     continue
-                weeks = item.get('weeks')  # None (every week), 'odd', or 'even'
+                weeks: str | None = item.get('weeks')  # None (every week), 'odd', or 'even'
                 if weeks == 'odd' and iso_week % 2 == 0:
                     continue
                 if weeks == 'even' and iso_week % 2 != 0:
                     continue
 
-                ref = team_info.ref
+                ref: str = team_info.pairing or team_info.ref
                 logger.debug(f'Adding practice for {ref} on {cal_date.strftime("%Y-%m-%d")} (weekday {cal_weekday})')
-                training_times = item['time']
-                times = training_times.split('-')
-                start = f'{cal_date.strftime("%Y-%m-%d")}T{times[0]}:00'
-                end = f'{cal_date.strftime("%Y-%m-%d")}T{times[1]}:00'
+                training_times: str = item['time']
+                training_times = training_times.replace('.', ':')
+                times: list[str] = training_times.split('-')
+                start: str = f'{cal_date.strftime("%Y-%m-%d")}T{times[0]}:00'
+                end: str = f'{cal_date.strftime("%Y-%m-%d")}T{times[1]}:00'
                 practice_days.append(
                     {
                         'id': f'{event_type_l10n}_{ref.replace(" ", "_")}_{cal_date.strftime("%Y%m%d")}',
@@ -1366,6 +1393,7 @@ def get_practices(team_id: str, request_start: datetime | None = None, request_e
     else:
         logger.error(f'Error fetching team information for {team_id}', 'danger')
         # TODO send telegram to ADMIN
+        return None
     return practice_days
 
 
@@ -1412,20 +1440,27 @@ def get_trampoline_events(url: str = 'https://www.americakes.dk/trampoline_event
 
 
 @app.route('/cal')
-def member_calendar():
-    # TODO get dept from session
-    teams: TeamData = session.get('member_teams', [])
+def calendar():
+    # TODO get dept(s) from session
+    type: str | None = request.args.get('type')
+    teams: TeamData = []
+    main_menu: str = url_for('member_menu')  # menu for members
+    if type and type == 'coach':
+        teams = session.get('teams', [])
+        main_menu = url_for('main_menu', user=session.get('username'))  # menu for coaches
+    else:
+        teams = session.get('member_teams', [])
     logger.debug(f'Teams from session: {teams}')
     # team_list = ','.join([team['ref'] for team in teams])
     team_ids = ','.join([team['id'] for team in teams])
     member_id: str = session.get('member_id')
-    return render_template('cal.html', member_id=member_id, lingua=get_locale(), team_list=team_ids, dept=CONVENTUS_DEPT_NAME)
+    return render_template('cal.html', member_id=member_id, lingua=get_locale(), team_list=team_ids, dept=CONVENTUS_DEPT_NAME, main_menu=main_menu)
 
 
 @app.route('/api/events', methods=['GET'])
 def get_events():
-    request_start = datetime.fromisoformat(request.args.get('start')) if request.args.get('start') else None
-    request_end = datetime.fromisoformat(request.args.get('end')) if request.args.get('end') else None
+    request_start: datetime | None = datetime.fromisoformat(request.args.get('start')) if request.args.get('start') else None
+    request_end: datetime | None = datetime.fromisoformat(request.args.get('end')) if request.args.get('end') else None
     logger.debug(f'Request start: {request.args.get("start") if request.args.get("start") else None}')
     logger.debug(f'Request end: {request.args.get("end") if request.args.get("end") else None}')
     team_list: str = request.args.get('team_list')
@@ -1441,16 +1476,20 @@ def get_events():
 
         if practices is None:
             failed_teams.append(team_id)
-        for event in practices:
-            events_list.append(
-                {
-                    'id': event.get('id'),
-                    'title': event.get('title'),
-                    'start': event.get('start'),  # FullCalendar maps this to the grid
-                    'end': event.get('end'),
-                    'description': event.get('description', ''),
-                }
-            )
+            continue
+
+        for practice in practices:
+            practice_event = {
+                'id': practice.get('id'),
+                'title': practice.get('title'),
+                'start': practice.get('start'),  # FullCalendar maps this to the grid
+                'end': practice.get('end'),
+                'description': practice.get('description', ''),
+                #'color': '#5b8dbf',
+            }
+            if request.args.get('type') != 'coach':
+                practice_event['url'] = url_for('member_signout', date=practice.get('start').split('T')[0])
+            events_list.append(practice_event)
     if failed_teams:
         if len(team_ids) == len(failed_teams):
             if len(team_ids) == 1:
@@ -1479,7 +1518,7 @@ def get_events():
                 start, end = days.split(' - ')
                 day, month_txt = start.split()
                 day_end, month_txt_end = end.split()
-                event_end = date(year, month_map[month_txt_end], int(day_end))
+                event_end = date(year, month_map[month_txt_end], int(day_end)) + timedelta(days=1)
             elif days and ' ' in days:  # single day in format "day month", e.g. "31 jan", split into day and month
                 day, month_txt = days.split()
             else:
@@ -1673,7 +1712,7 @@ def fb_webhook():
                                             team_signouts: list[models.Signout] = get_signout_list_from_db(
                                                 current_date, CONVENTUS_CLUB_ID, CONVENTUS_DEPT_ID.split('_')[-1], team_id
                                             )
-                                            paired_name = get_paired_name_from_team_id(team_id) or team_id
+                                            paired_name = get_pairing_from_team_id(team_id) or team_id
                                             if len(team_signouts) > 0:
                                                 logger.debug(f'get_signout_list_from_db for team {team_id} returned {len(team_signouts)} signouts')
                                                 content += f'{i18n.t("app.signout_response", team_id=paired_name, count=len(team_signouts), locale=locale)}\n'
@@ -1872,10 +1911,10 @@ def telegram_webhook():
                 code = ''.join(secrets.choice('0123456789') for _ in range(6))
 
                 # use language_code from user_info if available, otherwise default to 'da'
-                language_code = user_info.get('language_code')
+                language_code: str = user_info.get('language_code')
                 logger.info(f'User language_code: {language_code}')
                 if not language_code:
-                    language_code: str = 'da'
+                    language_code = 'da'
                 logger.debug(f'Using language_code: {language_code}')
 
                 # Save `service`, `verification_code`, `chat_id`, and `expires_at` into pending document
@@ -1957,6 +1996,31 @@ def escape_markdown_v2(text: str) -> str:
     # List of all 18 reserved characters: _ * [ ] ( ) ~ ` > # + - = | { } . !
     escape_chars = r'_*[]()~`>#+-=|{}.!'
     return re.sub(f'([{re.escape(escape_chars)}])', r'\\\1', text)
+
+
+# Dedicated handler for actual application crashes (500)
+@app.errorhandler(InternalServerError)
+def handle_500_error(e):
+    # Log the full exception string — this automatically triggers TelegramHandler
+    logger.error(f'Path: {request.path}\n\n{traceback.format_exc()}')
+
+    # Flash a simple message for the user
+    flash('An unexpected error occurred. Our team has been notified!', 'danger')
+    logger.debug(f'HTTP {e.code}: {e.name} - {e.description}')
+
+    # Render a dedicated simple error page
+    return render_template('error.html', code=500, title=e.name, description=e.description), 500
+
+
+# Catch ALL other HTTP errors (404, 403, 400, 405, etc.)
+@app.errorhandler(HTTPException)
+def handle_http_exception(e):
+    # Flash the error message if you use flash messages across your app
+    flash(f'{e.name}: {e.description}', 'warning')
+    logger.debug(f'HTTP {e.code}: {e.name} - {e.description}')
+
+    # Render ONE template for every non-500 HTTP status code
+    return render_template('error.html', code=e.code, title=e.name, description=e.description), e.code
 
 
 if __name__ == '__main__':

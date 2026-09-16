@@ -7,11 +7,11 @@ SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 TEMPLATE_DIR = os.path.join(SRC_DIR, 'templates')
 
 
-def get_all_rendered_templates(root_dir):
+def get_all_rendered_templates(root_dir) -> list[str]:
     """
     Scans all .py files under root_dir and extracts template names passed to render_template().
     """
-    templates = set()
+    templates: set[str] = set()
 
     for dirpath, _, filenames in os.walk(root_dir):
         # Skip virtual environments, cache, or external libraries
@@ -26,9 +26,9 @@ def get_all_rendered_templates(root_dir):
     return sorted(list(templates))
 
 
-def extract_templates_from_file(file_path):
+def extract_templates_from_file(file_path) -> set[str]:
     """Uses AST to parse the python file and find 'render_template' calls."""
-    templates = set()
+    templates: set[str] = set()
 
     with open(file_path, 'r', encoding='utf-8') as f:
         try:
@@ -46,14 +46,12 @@ def extract_templates_from_file(file_path):
                     first_arg = node.args[0]
                     # We can only statically analyze literal strings (e.g., "index.html")
                     if isinstance(first_arg, ast.Constant):  # Python 3.8+
-                        templates.add(first_arg.value)
-                    elif isinstance(first_arg, ast.Str):  # Python < 3.8 fallback
-                        templates.add(first_arg.s)
+                        templates.add(str(first_arg.value))
 
     return templates
 
 
-# 1. Dynamically discover all templates referenced in the code
+# Dynamically discover all templates referenced in the code
 REFERENCED_TEMPLATES = get_all_rendered_templates(SRC_DIR)
 
 

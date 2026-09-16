@@ -1,6 +1,6 @@
 [project]
 name = "eir"
-version = "0.3.0"
+version = "0.4.0"
 description = "Addon app to manage team activities. Currently adds functionality to Conventus."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -25,10 +25,10 @@ dev = [
     "freezegun>=1.5.5",
     "hatch>=1.16.1",
     "playwright>=1.60.0",
-    "pre-commit>=4.5.1",
+    "pre-commit>=4.6.2",
     "pytest>=9.0.1",
     "pytest-mock>=3.15.1",
-    "ruff>=0.15.12",
+    "ruff>=0.15.18,<0.16.0",
     "types-paramiko>=5.0.0.20260724",
 ]
 
@@ -44,6 +44,7 @@ testpaths = [
 # Allow lines to be as long as 150 characters
 line-length = 150
 include = ["*.py"]
+target-version = "py313"
 
 [tool.ruff.format]
 # Prefer single quotes over double quotes
@@ -63,3 +64,30 @@ files = ["app/*.py", "utils/*.py"]
 ignore_missing_imports = true
 check_untyped_defs = true
 mypy_path = "stubs/"
+
+# pyright config, for using Zed editor
+[tool.pyright]
+include = ["app", "utils"]      # my source folders
+exclude = [
+    "**/__pycache__",
+    "**/.venv",
+    "**/.ruff_cache",
+    ".vs",
+    ".vscode",
+]
+stubPath = "stubs"
+
+# Point pyright at your virtual environment so it resolves installed packages
+venvPath = "."                  # directory containing the venv (find . -maxdepth 2 -iname "pyvenv.cfg")
+venv = ".venv"                  # name of the venv folder
+
+# Overall strictness
+typeCheckingMode = "basic"      # options: "off", "basic", "standard", "strict"
+
+# Fine-tune individual rules instead of an all-or-nothing mode
+reportMissingImports = "warning"
+reportMissingTypeStubs = "none"
+reportOptionalMemberAccess = "none"
+reportGeneralTypeIssues = "warning"
+reportUnusedImport = "warning"
+reportUnboundVariable = "warning"

@@ -149,13 +149,17 @@ activemq-data/
 
 # Environments
 .env
+.env.*
 .envrc
-.venv
+.venv*
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# playwright
+auth.json
 
 # Spyder project settings
 .spyderproject
@@ -199,7 +203,7 @@ cython_debug/
 #   that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
 #   and can be added to the global gitignore or merged into this file. However, if you prefer, 
 #   you could uncomment the following to ignore the entire vscode folder
-# .vscode/
+.vscode/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
@@ -209,6 +213,13 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# Cursor
+#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
+#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
+#  refer to https://docs.cursor.com/context/ignore-files
+.cursorignore
+.cursorindexingignore
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
@@ -216,3 +227,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#other
+.python-version
+.vs
+

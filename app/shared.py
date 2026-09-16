@@ -1,5 +1,4 @@
 #!/usr/local/bin/python
-# -*- coding: UTF-8 -*-
 
 # from icu4py.messageformat import MessageFormat
 import i18n
@@ -29,14 +28,23 @@ CONVENTUS_DEPT_REPORT_ID = 'a_2875'  # Trampolingymnastik dept id, used for the 
 # a_<dept_id> is for querying depts (a = afdeling)
 CONVENTUS_DEPT_NAME = 'Trampolingymnastik'  # The name of the dept in Conventus
 DB_NAME = 'conventus_addons'  # the name of the MongoDB database to store the trampolinist and sign-out data for Conventus
+
+
+class TeamDataBase(TypedDict):
+    ref: str
+    id: str
+
+
+class TeamData(TeamDataBase, total=False):
+    team_name: str
+
+
+class PairedTeam(TypedDict):
+    name: str
+    teams: list[TeamData]
+
+
 PAIRED_TEAMS: list[PairedTeam] = [
-    {
-        'name': 'X25Hold 31 & 32',
-        'teams': [
-            {'team_name': 'X25Hold 31 - Trampolin - Begynder/Øvet fra skolestart til 8 år', 'ref': 'X25Hold 31', 'id': '984967'},
-            {'team_name': 'X25Hold 32 - Trampolin - Begynder/Øvet 8 år+', 'ref': 'X25Hold 32', 'id': '984969'},
-        ],
-    },
     {
         'name': 'Hold 37*',
         'teams': [
@@ -54,27 +62,13 @@ PAIRED_TEAMS: list[PairedTeam] = [
 ]
 
 
-class TeamDataBase(TypedDict):
-    ref: str
-    id: str
-
-
-class TeamData(TeamDataBase, total=False):
-    team_name: str
-
-
 class LoginResultBase(TypedDict):
     login_success: bool
 
 
 class LoginResult(LoginResultBase, total=False):
     cookies: RequestsCookieJar
-    login_page: bytes
-
-
-class PairedTeam(TypedDict):
-    name: str
-    teams: list[TeamData]
+    home_page: bytes
 
 
 @dataclass(frozen=True)
@@ -215,7 +209,7 @@ def current_season():
     return f'{current_year}/{current_year + 1}' if date.today().month >= 9 else f'{current_year - 1}/{current_year}'
 
 
-def get_paired_name(team: TeamData, paired_teams: list[PairedTeam] | None = None) -> str | None:
+def get_pairing(team: TeamData, paired_teams: list[PairedTeam] | None = None) -> str | None:
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database
@@ -232,10 +226,10 @@ def get_paired_team_ids(paired_name, paired_teams: list[PairedTeam] | None = Non
     for pair in paired_teams:
         if paired_name == pair['name']:
             return ','.join(t['id'] for t in pair['teams'])
-    return None  # if no pair found, return the original team dict
+    return None  # if no pair found, return None
 
 
-def get_paired_name_from_team_id(team_id: str, paired_teams: list[PairedTeam] | None = None) -> str | None:
+def get_pairing_from_team_id(team_id: str, paired_teams: list[PairedTeam] | None = None) -> str | None:
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database

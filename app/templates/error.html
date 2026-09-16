@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="{{ t('app.lingua') }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ code }} - {{ title }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <div class="error-card">
+            <h1>{{ code }}</h1>
+            <h2>{{ title }}</h2>
+            <p>{{ description }}</p>
+            <a href="{{ url_for('home') }}">{{ t('app.return_home') }}</a>
+        </div>
+    </body>
+</html>
