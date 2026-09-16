@@ -1,5 +1,6 @@
 {
   "lingua": "da",
+  "intro": "Eir er et værktøj, der bruges af trænere hos Greve Gymnastik og Trampolin (GGT) til at administrere holdindtjekninger, udtjekninger og relateret holdadministration.",
   "eir_for_conventus": "Eir til Conventus",
   "locale_best_match": "Det bedste matchende sprog er: %{lingua}",
   "credentials_failed": "Beklager, men brugernavn eller adgangskode var forkert.",
@@ -151,5 +152,12 @@
   "cannot_fetch_team_info_your_team": "Beklager, der opstod en fejl ved hentning af holdoplysninger til din hold. Kalenderen vil ikke vise denne information.",
   "cannot_fetch_team_info_all_your_teams": "Beklager, der opstod en fejl ved hentning af holdoplysninger til alle dine hold. Kalenderen vil ikke vise denne information.",
   "cannot_fetch_team_info_x_of_y_teams": "Beklager, der opstod en fejl ved hentning af holdoplysninger til %{count_failed} af %{count_teams}. Kalenderen vil ikke vise denne information.",
+  "privacy_policy": "privatlivspolitik",
+  "home": "Hjem",
+  "owner_": "Ejer:",
+  "contact_": "Kontakt:",
+  "choose_your_login": "Vælg din login",
+  "last_updated_": "Sidst opdateret:",
+  "return_home": "Retur til hjem",
   "end": "slut"
 }

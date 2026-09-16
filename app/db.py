@@ -474,6 +474,9 @@ def get_pairings_from_db() -> QuerySet[Team]:
 
 
 if __name__ == '__main__':
+    from dotenv import load_dotenv
+
+    load_dotenv()  # This loads variables from .env into os.environ
     parser = argparse.ArgumentParser()
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--trace', action='store_true')

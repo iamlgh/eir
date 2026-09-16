@@ -1,5 +1,6 @@
 {
   "lingua": "en",
+  "intro": "Eir is a tool used by coaches at Greve Gymnastik og Trampolin (GGT) to manage team check-ins, sign-outs, and related team administration.",
   "eir_for_conventus": "Eir for Conventus",
   "locale_best_match": "The best-match locale is: %{lingua}",
   "credentials_failed": "Sorry, invalid username or password.",
@@ -152,6 +153,13 @@
   "cannot_fetch_team_info_your_team": "Sorry, there was an error fetching team information for your team. The calendar will not show this info.",
   "cannot_fetch_team_info_all_your_teams": "Sorry, there was an error fetching team information for all your teams. The calendar will not show this info.",
   "cannot_fetch_team_info_x_of_y_teams": "Sorry, there was an error fetching team information for%{count_failed} of %{count_teams}. The calendar will not show this info.",
+  "privacy_policy": "Privacy Policy",
+  "home": "Home",
+  "owner_": "Owner:",
+  "contact_": "Contact:",
+  "choose_your_login": "Choose your login",
+  "last_updated_": "Last updated:",
+  "return_home": "Return Home",
   "end": "end"
 }
 

@@ -230,6 +230,27 @@ def test_notify_coach_v2_live():
                         )
                         == 1
                     )
+
+                    assert (
+                        notify_coach2(
+                            coach,
+                            notification_text=i18n.t(
+                                'app.signup_notification',
+                                name=name,
+                                event_type=event_type_l10n,
+                                team_or_event=team_ref,
+                                date=da_date,
+                                locale=coach.lingua,
+                            ),
+                            action='signup',
+                            name=name,
+                            event_type_l10n=event_type_l10n,
+                            team_or_event=team_ref,
+                            date=da_date,
+                    )
+                    == 1
+                )
+
     if not ran_test:
         pytest.skip('no coaches to notify for team, test skipped')
 

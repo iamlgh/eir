@@ -16,8 +16,9 @@ import re
 import requests
 import secrets
 import subprocess
+import traceback
+from werkzeug.exceptions import HTTPException, InternalServerError
 from zoneinfo import ZoneInfo
-
 
 # Import my specific functions from other scripts
 import conventus
@@ -152,11 +153,15 @@ def enforce_session_expiry():
             flash(i18n.t('app.session_expired'), 'danger')
 
 
+@app.route('/bad')
+def bad():
+    # Raise a raw Python exception to simulate a crash/bug
+    raise RuntimeError('This is a deliberate test crash for error 500!')
+
+
 @app.route('/')
 def home():
-    if get_locale() == 'da':
-        return render_template('index_da.html')
-    return render_template('index.html')
+    return render_template('home.html')
 
 
 @app.route('/privacypolicy')
@@ -204,6 +209,7 @@ def show_locale():
 
 
 @app.route('/coach')
+@check_coach_environment()
 def login_c():
     if session.get('PHPSESSID') and session.get('username') and session.get('teams'):
         s = set_session_cookie_for_requests()
@@ -274,9 +280,10 @@ def logout_c():
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def main_menu(user: str) -> ResponseReturnValue:
     # user can only go to their own menu, not someone else's
-    if session.get('username') != user:
+    session_username = session.get('username')
+    if session_username and session_username != user:
         flash(i18n.t('app.viewing_your_own_menu'), 'info')
-        user = session.get('username')
+        user = session_username
 
     # is there an active Conventus session?
     # make a test request to Conventus, and see if it works (e.g. by checking if the test page returned successfully
@@ -1150,7 +1157,7 @@ def signout_go() -> ResponseReturnValue:
         signup.delete()  # delete existing signups so we only have one signup/out record for the event
 
     # add signout to the database
-    result: models.Signout = add_signout_to_db(
+    result: models.Signout | None = add_signout_to_db(
         request.form.get('date'),
         member_id,
         club_id,
@@ -1967,6 +1974,31 @@ def escape_markdown_v2(text: str) -> str:
     # List of all 18 reserved characters: _ * [ ] ( ) ~ ` > # + - = | { } . !
     escape_chars = r'_*[]()~`>#+-=|{}.!'
     return re.sub(f'([{re.escape(escape_chars)}])', r'\\\1', text)
+
+
+# Dedicated handler for actual application crashes (500)
+@app.errorhandler(InternalServerError)
+def handle_500_error(e):
+    # Log the full exception string — this automatically triggers TelegramHandler
+    logger.error(f'Path: {request.path}\n\n{traceback.format_exc()}')
+
+    # Flash a simple message for the user
+    flash('An unexpected error occurred. Our team has been notified!', 'danger')
+    logger.debug(f'HTTP {e.code}: {e.name} - {e.description}')
+
+    # Render a dedicated simple error page
+    return render_template('error.html', code=500, title=e.name, description=e.description), 500
+
+
+# Catch ALL other HTTP errors (404, 403, 400, 405, etc.)
+@app.errorhandler(HTTPException)
+def handle_http_exception(e):
+    # Flash the error message if you use flash messages across your app
+    flash(f'{e.name}: {e.description}', 'warning')
+    logger.debug(f'HTTP {e.code}: {e.name} - {e.description}')
+
+    # Render ONE template for every non-500 HTTP status code
+    return render_template('error.html', code=e.code, title=e.name, description=e.description), e.code
 
 
 if __name__ == '__main__':
