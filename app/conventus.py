@@ -165,7 +165,7 @@ def coach_login(username: str, password: str, clubname: str, headers: CaseInsens
 
     # check for club name e.g. "Greve Gymnastik & Trampolin" in title
     # <title>Greve Gymnastik og Trampolin (GreveGym) | Conventus</title>
-    soup: BeautifulSoup = BeautifulSoup(response.content, features='html.parser')
+    soup = BeautifulSoup(response.content, features='html.parser')
     if os.environ.get('FLASK_ENV', '') == 'trace':
         if not (path_handler('data_path') / 'conventus_coach_home.html').exists():
             with open(path_handler('data_path') / 'conventus_coach_home.html', 'w', encoding='utf-8') as f:
@@ -340,7 +340,7 @@ def complete_member_login(cookies: dict, member_id: str, headers: CaseInsensitiv
     return False, None
 
 
-def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
+def get_member_profiles(content, profile: dict[str, str], team_profiles: list[dict[str, str | list[TeamData]]]):
     """this is used for narrowing down the club members from member_get_profile_options to team members in the CONVENTUS_DEPT_NAME dept and then getting those team names"""
     logger.debug(profile)
     soup = BeautifulSoup(content, features='html.parser')
