@@ -213,7 +213,7 @@ def update_signout_by_id(
     status: bool = False,  # default is setting signed-out to False (signed-in)
     reason: str = '',
     additional_reason: str = '',
-) -> Signout:
+) -> Signout | None:
     """
     You must be connected to the db
     """
@@ -235,7 +235,7 @@ def update_signout_by_id(
     else:
         print(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
         logger.error(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
-        raise Exception(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
+        return None
 
 
 @handle_db_errors
