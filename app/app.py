@@ -142,6 +142,25 @@ def require_session_keys(*keys, redirect_to='login_c'):
     return decorator
 
 
+def check_coach_environment():
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            required_vars = ['FB_APP_SECRET', 'EIR_FB_ACCESS_TOKEN', 'VERIFY_TOKEN', 'PAGE_ID', 'EIR_TELEGRAM_TOKEN']
+            missing = [var for var in required_vars if not os.environ.get(var)]
+
+            # If any vars are missing completely, fail the setup right here
+            if missing:
+                # for now a simple string is printed, later I will implement a flash and direct to a generic error page
+                return f'App will not run due to missing environment variables: {missing}', 500
+
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 @app.before_request
 def enforce_session_expiry():
     expires_at = session.get('expires_at')
