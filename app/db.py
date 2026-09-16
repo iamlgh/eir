@@ -24,8 +24,11 @@ logger: TraceLogger = logging.getLogger(__name__)  # type: ignore[assignment]
 
 
 def handle_db_errors(func):
+    """Wrap a database helper so persistence failures surface as ``DatabaseError``."""
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Call the wrapped helper while normalizing its database exceptions."""
         try:
             return func(*args, **kwargs)
         except ServerSelectionTimeoutError as e:
@@ -59,6 +62,10 @@ def handle_db_errors(func):
 
 
 def connect_to_db(alias: str = 'default') -> str:
+    """Reuse or establish a MongoEngine connection and return its alias.
+
+    Raise ``DatabaseError`` when MongoDB connection setup fails.
+    """
     caller = inspect.stack()[1]
     logger.debug(f'connect_to_db called from {caller.filename}:{caller.lineno} in {caller.function}, pid={os.getpid()}')
     db_name = DB_NAME
@@ -107,6 +114,7 @@ def date_from_str(date_str: str) -> datetime:
 def get_signout_list_from_db(
     date: str | datetime, club_id: str, dept_id: str, team_id: str | None = None, member_id: str | None = None, status: bool = True
 ) -> list[Signout]:
+    """Return sign-outs matching a date, organization, status, and optional member or team."""
     if type(date) is str:
         try:
             date = date_from_str(date)
@@ -133,6 +141,7 @@ def get_signout_list_from_db(
 
 @handle_db_errors
 def get_signout_by_id(signout_id: str) -> list[Signout]:
+    """Return all sign-out records with the requested document identifier."""
     filters: dict[str, str] = {'id': signout_id}
     docs: QuerySet[Signout] = Signout.objects(**filters)  # ** "unpacks" the dict
     # Process the results
@@ -156,9 +165,7 @@ def add_signout_to_db(
     reason: str = 'other',
     additional_reason='',
 ) -> Signout | None:
-    """
-    You must be connected to the db
-    """
+    """Create and persist a member sign-out, appending any additional reason text."""
     if additional_reason:
         reason = f'{reason}: {additional_reason}'
 
@@ -183,8 +190,9 @@ def update_signout_in_db(
     reason: str = '',
     additional_reason: str = '',
 ) -> Signout | None:
-    """
-    You must be connected to the db
+    """Update one active sign-out matching the supplied event and member fields.
+
+    Return the reloaded record, or ``None`` unless exactly one record matches.
     """
     if additional_reason:
         reason = f'{reason}: {additional_reason}'
@@ -214,8 +222,9 @@ def update_signout_by_id(
     reason: str = '',
     additional_reason: str = '',
 ) -> Signout:
-    """
-    You must be connected to the db
+    """Update the uniquely identified sign-out and return its reloaded record.
+
+    Raise ``DatabaseError`` unless exactly one record has the requested identifier.
     """
     if reason and additional_reason:
         reason = f'{reason}: {additional_reason}'
@@ -248,6 +257,10 @@ def get_member_signouts_from_db(
     history: bool = False,
     status: bool = True,
 ) -> list[Signout]:
+    """Return a member's sign-outs on or after a date, filtered by optional event fields.
+
+    When ``history`` is true, match the date exactly instead of using it as a lower bound.
+    """
     date_filter: str = 'date__gte'
     logger.debug(f'History: {history}')
     if history is True:
@@ -271,9 +284,7 @@ def get_member_signouts_from_db(
 def setup_notification(
     sid: str, username: str, club_id: str, service: str, lingua: str | None = None, team_ids: list[str] = []
 ) -> Notification | None:
-    """
-    You must be connected to the db
-    """
+    """Create and persist a coach's notification-service link."""
     new_notification: Notification = Notification(sid=sid, username=username, club_id=club_id, team_ids=team_ids, service=service)
     if lingua is not None:
         new_notification.lingua = lingua
@@ -291,10 +302,7 @@ def add_fb_notification(psid: str, username: str, club_id: str, team_ids: list[s
 
 @handle_db_errors
 def get_notifications(username: str, club_id: str, service: str) -> list[Notification]:
-    """
-    Lookup notifications by using the coach username and club_id and service
-    NB: You must be connected to the db
-    """
+    """Return a coach's notification links, optionally constrained by service."""
     filters: dict = {'username': username, 'club_id': club_id}
     if service:
         filters['service'] = service
@@ -312,10 +320,7 @@ def get_fb_notifications(username: str, club_id: str) -> list[Notification]:
 
 @handle_db_errors
 def get_notifications_by_sid(sid: str, service: str | None = None) -> list[Notification]:
-    """
-    Lookup notifications by sid, there should just be one
-    NB: You must be connected to the db
-    """
+    """Return notification links for a service account identifier and optional service."""
     filters: dict = {'sid': sid}
     if service:
         filters['service'] = service
@@ -333,10 +338,7 @@ def get_fb_notifications_by_psid(psid: str) -> list[Notification]:
 
 @handle_db_errors
 def get_coaches_to_notify(team_id: str) -> QuerySet:
-    """
-    Lookup notifications (sid and service) for notifications by team_id
-    NB: You must be connected to the db
-    """
+    """Return notification links subscribed to the requested team."""
     filters: dict = {'team_ids': team_id}
     docs: QuerySet = Notification.objects(**filters)
     return docs
@@ -344,9 +346,9 @@ def get_coaches_to_notify(team_id: str) -> QuerySet:
 
 @handle_db_errors
 def update_teams_for_notifications(username: str, club_id: str, service: str, team_ids: list[str]) -> dict:
-    """
-    Updates Notification documents with new team IDs
-    NB: You must be connected to the db
+    """Replace team subscriptions on exactly one notification link and return it.
+
+    Raise ``DatabaseError`` unless exactly one link matches the coach and service.
     """
     user_notification_count: int = Notification.objects(username=username, club_id=club_id, service=service).count()
     if user_notification_count == 1:
@@ -373,9 +375,9 @@ def update_teams_for_notifications(username: str, club_id: str, service: str, te
 
 @handle_db_errors
 def update_teams_for_fb_notifications(username: str, club_id: str, team_ids: list[str]) -> dict:
-    """
-    Updates Notification documents with new team IDs
-    NB: You must be connected to the db
+    """Replace team subscriptions on exactly one Facebook notification link and return it.
+
+    Raise ``DatabaseError`` unless exactly one Facebook link matches the coach.
     """
     user_notification_count: int = Notification.objects(username=username, club_id=club_id, service='facebook').count()
     if user_notification_count == 1:
@@ -429,6 +431,11 @@ def delete_link_for_coach(username: str, club_id: str, service: str) -> int:
 
 @handle_db_errors
 def save_pending_link(sid: str, code: str, name: str, service: str, lingua: str | None = None) -> str:
+    """Save a pending service link and return its code.
+
+    Return the retry-later localization key after three pending links exist for the
+    same service account and service.
+    """
     # query the class directly using the objects manager
     if PendingLink.objects(sid=sid, service=service).count() >= 3:
         return 'app.try_again_later'
@@ -438,9 +445,7 @@ def save_pending_link(sid: str, code: str, name: str, service: str, lingua: str 
 
 @handle_db_errors
 def add_team_info_to_db(team_info: dict) -> Team:
-    """
-    You must be connected to the db
-    """
+    """Remove transient activity state from ``team_info`` and persist the team."""
     team_info.pop('active', None)
     new_team: Team = Team(**team_info)
     new_team.save()
@@ -450,6 +455,7 @@ def add_team_info_to_db(team_info: dict) -> Team:
 
 @handle_db_errors
 def get_team_info_from_db(**kwargs) -> Team | None:
+    """Return the team matching the filters only when exactly one record exists."""
     teams: QuerySet[Team] = Team.objects(**kwargs)
     logger.debug(f'found {len(teams)} teams')
     if len(teams) == 1:
@@ -460,6 +466,7 @@ def get_team_info_from_db(**kwargs) -> Team | None:
 
 @handle_db_errors
 def add_pairing_to_db(pairing: str, **kwargs) -> int:
+    """Assign a pairing name to matching teams and return the number matched."""
     teams: QuerySet[Team] = Team.objects(**kwargs)
     logger.debug(f'Found {len(teams)} teams')
     teams.update(set__pairing=pairing)
@@ -468,6 +475,7 @@ def add_pairing_to_db(pairing: str, **kwargs) -> int:
 
 @handle_db_errors
 def get_pairings_from_db() -> QuerySet[Team]:
+    """Return team pairing records limited to their pairing names and references."""
     teams: QuerySet[Team] = Team.objects(pairing__exists=True).only('pairing', 'ref')
     logger.debug(f'Found {len(teams)} teams')
     return teams

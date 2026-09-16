@@ -210,6 +210,7 @@ def current_season():
 
 
 def get_pairing(team: TeamData, paired_teams: list[PairedTeam] | None = None) -> str | None:
+    """Return the pairing name containing a team's reference, if any."""
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database
@@ -220,6 +221,7 @@ def get_pairing(team: TeamData, paired_teams: list[PairedTeam] | None = None) ->
 
 
 def get_paired_team_ids(paired_name, paired_teams: list[PairedTeam] | None = None) -> str | None:
+    """Return comma-separated team IDs for a pairing name, if found."""
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database
@@ -230,6 +232,7 @@ def get_paired_team_ids(paired_name, paired_teams: list[PairedTeam] | None = Non
 
 
 def get_pairing_from_team_id(team_id: str, paired_teams: list[PairedTeam] | None = None) -> str | None:
+    """Return the pairing name containing a team identifier, if any."""
     if paired_teams is None:
         # paired_teams = fetch_paired_teams_from_db()
         paired_teams = PAIRED_TEAMS  # until we implement the actual fetching from the database

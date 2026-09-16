@@ -10,6 +10,7 @@ OUTPUT_FILE = BASE_DIR / 'app' / 'static' / 'build_date.json'
 
 
 def update_build_date():
+    """Write the current UTC build timestamp and stage the JSON file with Git."""
     # Get current UTC time in ISO format
     now = datetime.now(timezone.utc)
     data = {

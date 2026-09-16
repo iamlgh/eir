@@ -14,6 +14,11 @@ load_dotenv()  # This loads variables from .env into os.environ
 
 
 def sync_collections(collection_name: str, debug: bool = False) -> None:
+    """Replace a test collection with a batched copy of its production counterpart.
+
+    Leave the test collection unchanged when production is empty. Exit with status
+    1 when configuration is missing or MongoDB reports an error.
+    """
     # Fetch environment variables
     prod_uri: Optional[str] = os.environ.get('MONGO_URI_PROD')
     test_uri: Optional[str] = os.environ.get('MONGO_URI_TEST')
@@ -98,6 +103,10 @@ def sync_collections(collection_name: str, debug: bool = False) -> None:
 
 
 def confirm_destructive_sync(collection_names: list[str], test_uri: str) -> None:
+    """Require an exact ``Y`` confirmation before replacing selected test collections.
+
+    Exit successfully without changes for any other response.
+    """
     names: str = ', '.join(collection_names)
     safe_uri: str = re.sub(r'://[^@]+@', '://<user>:<password>@', test_uri)
     print(f'WARNING: this will DELETE all existing test data in: {names}')

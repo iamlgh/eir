@@ -66,6 +66,7 @@ logger: TraceLogger = logging.getLogger(__name__)  # type: ignore[assignment]
 
 
 def create_app():
+    """Create and configure the Flask application and its shared services."""
     app = Flask(__name__)
 
     # secret_key and logging, based on the FLASK_ENV
@@ -143,9 +144,14 @@ def require_session_keys(*keys, redirect_to='login_c'):
 
 
 def check_coach_environment():
+    """Return a decorator that rejects coach requests when integrations are not configured."""
+
     def decorator(f):
+        """Decorate a coach endpoint with the integration environment check."""
+
         @wraps(f)
         def wrapper(*args, **kwargs):
+            """Return HTTP 500 when a required coach integration variable is missing."""
             required_vars = ['FB_APP_SECRET', 'EIR_FB_ACCESS_TOKEN', 'VERIFY_TOKEN', 'PAGE_ID', 'EIR_TELEGRAM_TOKEN']
             missing = [var for var in required_vars if not os.environ.get(var)]
 
@@ -163,6 +169,7 @@ def check_coach_environment():
 
 @app.before_request
 def enforce_session_expiry():
+    """Clear and flag a session after its UTC expiration time has passed."""
     expires_at = session.get('expires_at')
     if expires_at is not None:
         # datetimes pulled back out of the session are already tz-aware, if they were stored tz-aware
@@ -174,12 +181,14 @@ def enforce_session_expiry():
 
 @app.route('/bad')
 def bad():
+    """Raise a deliberate runtime error to exercise the HTTP 500 handler."""
     # Raise a raw Python exception to simulate a crash/bug
     raise RuntimeError('This is a deliberate test crash for error 500!')
 
 
 @app.route('/')
 def home():
+    """Render the application home page."""
     return render_template('home.html')
 
 
@@ -298,6 +307,7 @@ def logout_c():
 @app.route('/menu/<user>')
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def main_menu(user: str) -> ResponseReturnValue:
+    """Render a coach menu after validating its owner and the Conventus session."""
     # user can only go to their own menu, not someone else's
     session_username = session.get('username')
     if session_username and session_username != user:
@@ -425,6 +435,7 @@ def notifications(user: str):
 @app.route('/notification_update/<user>', methods=['POST'])
 @require_session_keys('PHPSESSID', 'username', 'teams', redirect_to='login_c')
 def notification_update(user: str):
+    """Update a coach's team subscriptions for a supported notification service."""
     logger.info('Updating notifications started')
     service: str | None = request.form.get('service')
     svc_map = {'facebook': 'fb', 'telegram': 'tg'}
@@ -577,6 +588,7 @@ def member_updates(user: str) -> ResponseReturnValue:
 
 
 def team_menu_logic() -> tuple:
+    """Return unique paired team references together with today's ISO date."""
     # display "team", e.g. Hold 65 (or paired name, e.g. Hold 31 & 32) for coaches
     teams = session.get('teams', [])
     logger.debug(f'Received from session: {teams}')
@@ -1153,6 +1165,7 @@ def member_signout(date: str) -> ResponseReturnValue:
 @app.route('/signout_go', methods=['POST'])
 @require_session_keys('name', 'member_id', 'member_teams', redirect_to='login_m')
 def signout_go() -> ResponseReturnValue:
+    """Record a submitted member sign-out and attempt to notify subscribed coaches."""
     name: str = session.get('name')
     member_id: str = request.form.get('member_id')
     team_id: str = request.form.get('team_id')
@@ -1240,6 +1253,7 @@ def signout_go() -> ResponseReturnValue:
 @app.route('/signup_go', methods=['POST'])
 @require_session_keys('member_id', 'member_teams', redirect_to='login_m')
 def signup_go() -> ResponseReturnValue:
+    """Mark a recorded sign-out as signed in and attempt to notify subscribed coaches."""
     name: str | None = session.get('name')
     if not name:
         flash(i18n.t('app.session_expired'), 'danger')
@@ -1333,9 +1347,9 @@ def notify_coach2(coach, **kwargs) -> int:
 
 
 def get_practices(team_id: str, request_start: datetime | None = None, request_end: datetime | None = None) -> list[dict] | None:
-    """
-    Generate a list of all practice days in the season (e.g., every Monday and Wednesday)
-    if request_start and request_end dates are provided, use the intersection of season dates and date range
+    """Build calendar events for a team's scheduled practices within optional bounds.
+
+    Return ``None`` when no single matching team record is available.
     """
     tz: ZoneInfo = ZoneInfo('Europe/Copenhagen')
     # Define the start and end dates for the season (e.g., from September 1 to May 31)
@@ -1438,6 +1452,7 @@ def get_trampoline_events(url: str = 'https://www.americakes.dk/trampoline_event
 
 @app.route('/cal')
 def calendar():
+    """Render a member or coach calendar using the teams stored in the session."""
     # TODO get dept(s) from session
     type: str | None = request.args.get('type')
     teams: TeamData = []
@@ -1456,6 +1471,7 @@ def calendar():
 
 @app.route('/api/events', methods=['GET'])
 def get_events():
+    """Return calendar events for the requested teams and department as JSON."""
     request_start: datetime | None = datetime.fromisoformat(request.args.get('start')) if request.args.get('start') else None
     request_end: datetime | None = datetime.fromisoformat(request.args.get('end')) if request.args.get('end') else None
     logger.debug(f'Request start: {request.args.get("start") if request.args.get("start") else None}')
@@ -1622,6 +1638,7 @@ def get_fb_user_info(sid: str) -> dict | None:
 
 @app.route('/fb_webhook', methods=['GET', 'POST'])
 def fb_webhook():
+    """Handle Meta verification and Messenger linking or sign-out queries."""
     logger.info('Received fb_webhook call')
     if request.method == 'GET':
         # Handle Meta's initial handshake/verification
@@ -1889,6 +1906,7 @@ def send_fb_utility_message(psid: str, lingua: str, message_type: str = 'event',
 # =====================================================================
 @app.route('/telegram_webhook', methods=['POST'])
 def telegram_webhook():
+    """Handle Telegram linking deep links and acknowledge incoming updates."""
     payload = request.get_json()
     logger.trace(f'Full webhook payload received:\n{json.dumps(payload, indent=2)}')
     if 'message' in payload and 'text' in payload['message']:
@@ -1998,6 +2016,7 @@ def escape_markdown_v2(text: str) -> str:
 # Dedicated handler for actual application crashes (500)
 @app.errorhandler(InternalServerError)
 def handle_500_error(e):
+    """Report an application failure and render the dedicated HTTP 500 page."""
     # Log the full exception string — this automatically triggers TelegramHandler
     logger.error(f'Path: {request.path}\n\n{traceback.format_exc()}')
 
@@ -2012,6 +2031,7 @@ def handle_500_error(e):
 # Catch ALL other HTTP errors (404, 403, 400, 405, etc.)
 @app.errorhandler(HTTPException)
 def handle_http_exception(e):
+    """Flash and render a page for a non-500 HTTP exception."""
     # Flash the error message if you use flash messages across your app
     flash(f'{e.name}: {e.description}', 'warning')
     logger.debug(f'HTTP {e.code}: {e.name} - {e.description}')

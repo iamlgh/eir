@@ -71,6 +71,10 @@ def _configure_local_logger(debug=False) -> None:
 
 
 def publish(args: argparse.Namespace) -> None:
+    """Upload selected calendar files over SFTP according to the CLI options.
+
+    Exit with status 1 when connection or publishing fails.
+    """
     import paramiko
     import socket
 
