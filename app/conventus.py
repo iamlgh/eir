@@ -345,12 +345,13 @@ def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
     logger.debug(profile)
     soup = BeautifulSoup(content, features='html.parser')
     if os.environ.get('FLASK_ENV', '') == 'trace':
-        if not (path_handler('data_path') / 'choose_profile.html').exists():
-            with open(path_handler('data_path') / 'choose_profile.html', 'wb') as f:
+        if not (path_handler('data_path') / 'overview.html').exists():
+            with open(path_handler('data_path') / 'overview.html', 'wb') as f:
                 f.write(content)
     team_tables = soup.find_all('table', class_='uos')
 
     # find CONVENTUS_DEPT_NAME (Trampolingymnastik), then any teams where the person is a member (not a coach, waiting list, etc.) and add those teams to the profile['teams'] list
+    teams: list[TeamData] = []
     for table in team_tables:
         tds = table.find_all('td')
 
@@ -364,11 +365,12 @@ def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
                     logger.debug(team_td)
                     # regex match for (<anything>)
                     if team_td.find('span', class_='light') and re.match(r'\(.+\)', team_td.find('span', class_='light').get_text()):
-                        logger.debug('Member profile is a coach')
+                        logger.debug('Member profile is a non-member: ' + team_td.find('span', class_='light').get_text())
                         continue  # skip this team if, it is marked as a non-member (coach, waiting list, etc.)
                     else:
+                        logger.debug('Member profile is a member')
                         team_name_full = team_td.get_text().strip()
-                        logger.info(team_name_full)
+                        logger.debug(team_name_full)
                         team_id = None
                         try:
                             team_id = team_td.get('onclick').split('&idv1=')[1].rstrip("';")
@@ -379,13 +381,13 @@ def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
                                 logger.debug(f'No onclick attribute found for team td: {team_td}')
                         if team_name_full and team_id:
                             logger.debug('Member profile is a team member')
-                            team: TeamData = make_team_dict(team_id, team_name_full)
-                            if profile.get('teams'):
-                                profile['teams'].append(team)
-                            else:
-                                profile['teams'] = [team]
-    if profile.get('teams'):
-        team_profiles.append(profile)
+                            teams.append(make_team_dict(team_id, team_name_full))
+    if teams:
+        extended_profile: dict[str, str | list[TeamData]] = {}  # profile with teams
+        for key, value in profile.items():
+            extended_profile[key] = value
+        extended_profile['teams'] = teams
+        team_profiles.append(extended_profile)
 
 
 def parse_member_profile(content: str) -> dict:

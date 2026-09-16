@@ -2,7 +2,7 @@ import argparse
 from bs4 import ResultSet, Tag
 from datetime import datetime, timedelta, timezone, date
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify, abort
 from flask.typing import ResponseReturnValue
 from functools import wraps
 import hashlib
@@ -175,7 +175,10 @@ def enforce_session_expiry():
 @app.route('/bad')
 def bad():
     # Raise a raw Python exception to simulate a crash/bug
-    raise RuntimeError('This is a deliberate test crash for error 500!')
+    if os.environ.get('FLASK_ENV') == 'production' or os.environ.get('FLASK_ENV') == 'prod':
+        abort(404)
+
+    raise RuntimeError('This is a deliberate test crash -- error 500!')
 
 
 @app.route('/')

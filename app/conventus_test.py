@@ -17,6 +17,7 @@ from conventus import (
     member_get_profile_options,
     find_team_checkin_list_id_from_content,
     parse_member_profile,
+    get_member_profiles,
     extract_teams,
     parse_team_td,
     make_team_dict,
@@ -137,7 +138,21 @@ def test_extract_teams():
 
 
 def test_get_member_profiles():
-    pass
+    content: bytes = b''
+    if exists(path_handler('data_path') / 'mock_team_overview.html'):
+        with open(path_handler('data_path') / 'mock_team_overview.html', 'rb') as f:
+            content = f.read()
+        team_profiles = []
+        get_member_profiles(content, {'name': 'Frøken Danmark', 'member_id': 'member11'}, team_profiles)
+        assert team_profiles == [
+            {
+                'name': 'Frøken Danmark',
+                'member_id': 'member11',
+                'teams': [{'team_name': 'Team 8 - Trampoline - Competition/Advanced', 'id': '1010103', 'ref': 'Team 8'}],
+            }
+        ]
+    else:
+        pytest.skip(f'{path_handler("data_path") / "mock_team_overview.html"} file missing, test skipped')
 
 
 def test_parse_member_profile():
