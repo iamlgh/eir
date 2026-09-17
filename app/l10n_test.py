@@ -17,7 +17,7 @@ import pytest
 import re
 from shared import path_handler
 
-i18n.load_path.append(path_handler('i18n_path'))
+i18n.load_path.append(str(path_handler('i18n_path')))
 i18n.set('file_format', 'json')
 i18n.set('skip_locale_root_data', True)
 i18n.set('fallback', 'en')
@@ -72,7 +72,7 @@ def _flatten(data, prefix, locale, out):
             out[(locale, key)] = v
 
 
-def _load_locale_strings() -> dict[str, str]:
+def _load_locale_strings() -> dict[tuple[str, str], str | dict[str, str]]:
     """Returns {(locale, dotted.key): raw_string} for every string in every locale file."""
     strings = {}
     i18n_dir = Path(path_handler('i18n_path'))

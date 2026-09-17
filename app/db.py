@@ -244,7 +244,7 @@ def update_signout_by_id(
     else:
         print(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
         logger.error(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
-        raise Exception(f'Found {len(matching_signouts)} signouts for signout_id={signout_id}, expected 1')
+        return None
 
 
 @handle_db_errors
@@ -294,9 +294,6 @@ def setup_notification(
 
 
 def add_fb_notification(psid: str, username: str, club_id: str, team_ids: list[str] = []) -> Notification | None:
-    """
-    You must be connected to the db
-    """
     return setup_notification(psid, username, club_id, 'facebook', team_ids=team_ids)
 
 
@@ -338,7 +335,7 @@ def get_fb_notifications_by_psid(psid: str) -> list[Notification]:
 
 @handle_db_errors
 def get_coaches_to_notify(team_id: str) -> QuerySet:
-    """Return notification links subscribed to the requested team."""
+    """Return notification subscriptions (sid and service) by team_id."""
     filters: dict = {'team_ids': team_id}
     docs: QuerySet = Notification.objects(**filters)
     return docs
@@ -346,7 +343,7 @@ def get_coaches_to_notify(team_id: str) -> QuerySet:
 
 @handle_db_errors
 def update_teams_for_notifications(username: str, club_id: str, service: str, team_ids: list[str]) -> dict:
-    """Replace team subscriptions on exactly one notification link and return it.
+    """Replace team subscriptions, if there is exactly one notification link, and return it as a dict.
 
     Raise ``DatabaseError`` unless exactly one link matches the coach and service.
     """
@@ -375,7 +372,7 @@ def update_teams_for_notifications(username: str, club_id: str, service: str, te
 
 @handle_db_errors
 def update_teams_for_fb_notifications(username: str, club_id: str, team_ids: list[str]) -> dict:
-    """Replace team subscriptions on exactly one Facebook notification link and return it.
+    """Replace team subscriptions, oif there is exactly one notification link, and return it as a dict.
 
     Raise ``DatabaseError`` unless exactly one Facebook link matches the coach.
     """
@@ -405,9 +402,6 @@ def delete_fb_messenger_link_for_coach(
     username: str,
     club_id: str,
 ) -> int:
-    """
-    You must be connected to the db
-    """
     deleted_count: int = Notification.objects(username=username, club_id=club_id, service='facebook').delete()
     if deleted_count != 1:
         logger.info(f'Deleted {deleted_count} FB notification entries for "{username}"')
@@ -418,9 +412,6 @@ def delete_fb_messenger_link_for_coach(
 
 @handle_db_errors
 def delete_link_for_coach(username: str, club_id: str, service: str) -> int:
-    """
-    You must be connected to the db
-    """
     deleted_count: int = Notification.objects(username=username, club_id=club_id, service=service).delete()
     if deleted_count != 1:
         logger.info(f'Deleted {deleted_count} {service} notification entries for "{username}"')

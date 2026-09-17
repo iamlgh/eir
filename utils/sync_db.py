@@ -13,6 +13,10 @@ from pymongo.results import DeleteResult
 load_dotenv()  # This loads variables from .env into os.environ
 
 
+def safe_uri(uri: str) -> str:
+    return re.sub(r'://[^@]+@', '://<user>:<password>@', uri)
+
+
 def sync_collections(collection_name: str, debug: bool = False) -> None:
     """Replace a test collection with a batched copy of its production counterpart.
 
@@ -37,6 +41,11 @@ def sync_collections(collection_name: str, debug: bool = False) -> None:
         sys.exit(1)
 
     assert prod_uri and test_uri and db_name  # narrows types to str for mypy
+
+    if prod_uri == test_uri:
+        print(f'Error: MONGO_URI_PROD and MONGO_URI_TEST are the same: {safe_uri(prod_uri)}', file=sys.stderr)
+        sys.exit(1)
+
     batch_size: int = 500
 
     prod_client: Optional[MongoClient] = None
@@ -108,9 +117,8 @@ def confirm_destructive_sync(collection_names: list[str], test_uri: str) -> None
     Exit successfully without changes for any other response.
     """
     names: str = ', '.join(collection_names)
-    safe_uri: str = re.sub(r'://[^@]+@', '://<user>:<password>@', test_uri)
     print(f'WARNING: this will DELETE all existing test data in: {names}')
-    print(f'from test database {safe_uri}')
+    print(f'from test database {safe_uri(test_uri)}')
     print('and replace it with a copy of production. This cannot be undone.')
     answer: str = input('Type Y to proceed: ').strip()
     if answer != 'Y':

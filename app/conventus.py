@@ -166,7 +166,7 @@ def coach_login(username: str, password: str, clubname: str, headers: CaseInsens
 
     # check for club name e.g. "Greve Gymnastik & Trampolin" in title
     # <title>Greve Gymnastik og Trampolin (GreveGym) | Conventus</title>
-    soup: BeautifulSoup = BeautifulSoup(response.content, features='html.parser')
+    soup = BeautifulSoup(response.content, features='html.parser')
     if os.environ.get('FLASK_ENV', '') == 'trace':
         if not (path_handler('data_path') / 'conventus_coach_home.html').exists():
             with open(path_handler('data_path') / 'conventus_coach_home.html', 'w', encoding='utf-8') as f:
@@ -328,7 +328,7 @@ def check_for_added_and_removed_members_by_teams(
 
 
 def complete_member_login(cookies: dict, member_id: str, headers: CaseInsensitiveDict = HEADERS) -> tuple[bool, requests.Response | None]:
-    """Select a member profile and return whether selection succeeded and its response."""
+    """After logging in as member, this is used to log into a specific member profile or switch the member profile"""
     response: requests.Response = requests.get(
         'https://www.conventus.dk/before_login/choose_profil_action.php',
         params={'medlem': member_id},
@@ -345,17 +345,19 @@ def complete_member_login(cookies: dict, member_id: str, headers: CaseInsensitiv
     return False, None
 
 
-def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
-    """Populate an eligible profile's supported teams and append it to ``team_profiles``."""
+def get_member_profiles(content, profile: dict[str, str], team_profiles: list[dict[str, str | list[TeamData]]]):
+    """Populate an eligible profile's supported teams and append the expanded profile to ``team_profiles``.
+    Only to team members in the CONVENTUS_DEPT_NAME dept are eligible teams"""
     logger.debug(profile)
     soup = BeautifulSoup(content, features='html.parser')
     if os.environ.get('FLASK_ENV', '') == 'trace':
-        if not (path_handler('data_path') / 'choose_profile.html').exists():
-            with open(path_handler('data_path') / 'choose_profile.html', 'wb') as f:
+        if not (path_handler('data_path') / 'overview.html').exists():
+            with open(path_handler('data_path') / 'overview.html', 'wb') as f:
                 f.write(content)
     team_tables = soup.find_all('table', class_='uos')
 
     # find CONVENTUS_DEPT_NAME (Trampolingymnastik), then any teams where the person is a member (not a coach, waiting list, etc.) and add those teams to the profile['teams'] list
+    teams: list[TeamData] = []
     for table in team_tables:
         tds = table.find_all('td')
 
@@ -369,11 +371,12 @@ def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
                     logger.debug(team_td)
                     # regex match for (<anything>)
                     if team_td.find('span', class_='light') and re.match(r'\(.+\)', team_td.find('span', class_='light').get_text()):
-                        logger.debug('Member profile is a coach')
+                        logger.debug('Member profile is a non-member: ' + team_td.find('span', class_='light').get_text())
                         continue  # skip this team if, it is marked as a non-member (coach, waiting list, etc.)
                     else:
+                        logger.debug('Member profile is a member')
                         team_name_full = team_td.get_text().strip()
-                        logger.info(team_name_full)
+                        logger.debug(team_name_full)
                         team_id = None
                         try:
                             team_id = team_td.get('onclick').split('&idv1=')[1].rstrip("';")
@@ -384,13 +387,13 @@ def get_member_profiles(content, profile: dict[str, str], team_profiles: list):
                                 logger.debug(f'No onclick attribute found for team td: {team_td}')
                         if team_name_full and team_id:
                             logger.debug('Member profile is a team member')
-                            team: TeamData = make_team_dict(team_id, team_name_full)
-                            if profile.get('teams'):
-                                profile['teams'].append(team)
-                            else:
-                                profile['teams'] = [team]
-    if profile.get('teams'):
-        team_profiles.append(profile)
+                            teams.append(make_team_dict(team_id, team_name_full))
+    if teams:
+        extended_profile: dict[str, str | list[TeamData]] = {}  # profile with teams
+        for key, value in profile.items():
+            extended_profile[key] = value
+        extended_profile['teams'] = teams
+        team_profiles.append(extended_profile)
 
 
 def parse_member_profile(content: str) -> dict:
@@ -921,7 +924,7 @@ def run_login_loggedin_get(cookies, headers: CaseInsensitiveDict = HEADERS, allo
 
 
 def member_get_profile_options(content) -> list[dict[str, str]]:
-    """Extract names and member IDs from a Conventus profile-selection page."""
+    """If there are several profiles connected to a login, extract names and member IDs from the Conventus profile-selection page."""
     soup = BeautifulSoup(content, features='html.parser')
     member_table = soup.find('table', class_='bt')
     if member_table is None:
@@ -955,10 +958,19 @@ def member_get_profile_options(content) -> list[dict[str, str]]:
 
 def find_member_checkins(team_id, date, content, docs: list[models.Signout] | None = None) -> list[dict]:
     """Combine members parsed from a check-in page with their sign-out records.
+    From the content provided, find the members in the check-in list for the team and date, as well as query the DB for signouts
+        and return a list of dicts with member_id, member_name, and status (checked-in or signed-out + reason)
 
-    When records are not supplied, they are queried from the database; a database
-    failure is represented by an initial ``{'db_available': False}`` item. Raise
+    a database failure is represented by an initial ``{'db_available': False}`` item. Raise
     ``ParsingError`` when the expected member markup is absent or malformed.
+
+    expected content:
+        <div class="row body simple">
+            <div class="col-xs-1">
+                <input type="checkbox" class="pull-right" onclick="medlem_clicked([member_id], 2);" name="medlem_[member_id]_2" id="medlem_[member_id]_2" checked />
+            </div>
+            <div class="col-xs-11 arrow" onclick="$('#medlem_[member_id]_2').click();">[member_name]</div>
+        </div>
     """
     soup = BeautifulSoup(content, features='html.parser')
     # logger.trace(soup.prettify())

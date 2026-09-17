@@ -50,7 +50,7 @@
                 margin: 0;
                 padding: 8px;
                 box-sizing: border-box;
-                /* Use min-height so it takes at least the viewport height, 
+                /* Use min-height so it takes at least the viewport height,
                    but can expand and scroll if content is longer */
                 min-height: 100dvh;
                 height: auto !important;
@@ -153,16 +153,16 @@
                 eventClick: function(info) {
                     let text = "{{ t('app.event') }}: " + info.event.title + "\n"
                     if (info.event.extendedProps.place) {
-                        "{{ t('app.place') }}: " + info.event.extendedProps.place + "\n"
+                        text += "{{ t('app.place') }}: " + info.event.extendedProps.place + "\n"
                     }
                     if (info.event.extendedProps.address) {
-                        "{{ t('app.address') }}: " + info.event.extendedProps.address + "\n"
+                        text += "{{ t('app.address') }}: " + info.event.extendedProps.address + "\n"
                     }
                     if (info.event.extendedProps.program) {
-                        "{{ t('app.program') }}: " + info.event.extendedProps.program + "\n"
+                        text += "{{ t('app.program') }}: " + info.event.extendedProps.program + "\n"
                     }
                     if (info.event.extendedProps.deadline) {
-                        "{{ t('app.deadline') }}: " + info.event.extendedProps.deadline + "\n"
+                        text += "{{ t('app.deadline') }}: " + info.event.extendedProps.deadline + "\n"
                     }
                     alert(text)
                 }

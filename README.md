@@ -14,7 +14,7 @@ This repo is a **sanitized snapshot** of an actively developed private codebase,
     - Calendar with team schedule and GymDanmark Trampoline events
 - Coach features:
     - Notifications when a member signs up or cancels for a class
-    - Checkin-in of multiple teams at once (i.e. when two teams meet at the same time, or their signup is split based on payment method)
+    - Check-in of multiple teams at once (i.e. when two teams meet at the same time, or their signup is split based on payment method)
     - Check teams for added and removed members
     - Calendar with schedule for all teams and GymDanmark Trampoline events
 

@@ -2,7 +2,7 @@ import argparse
 from bs4 import ResultSet, Tag
 from datetime import datetime, timedelta, timezone, date
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response, jsonify, abort
 from flask.typing import ResponseReturnValue
 from functools import wraps
 import hashlib
@@ -182,8 +182,11 @@ def enforce_session_expiry():
 @app.route('/bad')
 def bad():
     """Raise a deliberate runtime error to exercise the HTTP 500 handler."""
+    if os.environ.get('FLASK_ENV') == 'production' or os.environ.get('FLASK_ENV') == 'prod':
+        abort(404)
+
     # Raise a raw Python exception to simulate a crash/bug
-    raise RuntimeError('This is a deliberate test crash for error 500!')
+    raise RuntimeError('This is a deliberate test crash -- error 500!')
 
 
 @app.route('/')
@@ -1347,7 +1350,8 @@ def notify_coach2(coach, **kwargs) -> int:
 
 
 def get_practices(team_id: str, request_start: datetime | None = None, request_end: datetime | None = None) -> list[dict] | None:
-    """Build calendar events for a team's scheduled practices within optional bounds.
+    """Generate a list of all practice days in the season (e.g., every Monday and Wednesday)
+    if request_start and request_end dates are provided, use the intersection of season dates and date range
 
     Return ``None`` when no single matching team record is available.
     """
