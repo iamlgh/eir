@@ -17,6 +17,16 @@ p, a {
     text-align: center;
 }
 
+.error-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
 .login-card {
     border: 1px solid #ddd;
     padding: 20px;
@@ -76,7 +86,6 @@ p, a {
     cursor: pointer; /* Makes it feel like a link/button on hover */
 }
 
-
 /* General styling for all alerts */
 .alert {
     padding: 15px;
@@ -92,6 +101,13 @@ p, a {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+/* Yellow for warning */
+.alert-warning {
+    color: #474500;
+    background-color: #ede193;
+    border-color: #ece193;
 }
 
 /* Green for success */

@@ -78,7 +78,7 @@ def log_redirect(response) -> str | None:
     return None
 
 
-def get_home_page(cookies: requests.cookies.RequestsCookieJar, headers: CaseInsensitiveDict = HEADERS) -> bytes:
+def get_home_page(cookies: requests.cookies.RequestsCookieJar, headers: CaseInsensitiveDict | Headers = HEADERS) -> bytes:
     response: requests.Response = run_login_loggedin_get(cookies, headers)
     logger.debug(f'Login home response code: {response.status_code}')
     ##logger.trace(response.content)
@@ -94,7 +94,8 @@ def get_home_page(cookies: requests.cookies.RequestsCookieJar, headers: CaseInse
         return response.content
 
 
-def coach_login(username: str, password: str, clubname: str, headers: CaseInsensitiveDict = HEADERS) -> LoginResult:
+def coach_login(username: str, password: str, clubname: str, headers: CaseInsensitiveDict | Headers = HEADERS) -> LoginResult:
+    """Authenticate a coach and return login state plus cookies and home page on success."""
     logger.info('Logging into Conventus as coach')
     login_success: bool = False
     hdrs: CaseInsensitiveDict = header_passthru(headers)
@@ -199,7 +200,7 @@ def make_team_dict(team_id: str, full_team_name: str, ref: str | None = None) ->
     return {'team_name': re.sub(r' *\([^)]+\)', '', full_team_name), 'id': team_id, 'ref': ref}
 
 
-def get_team_tds(content: str) -> ResultSet[Tag]:  # this should be update to ResultSet[Tag] (ResultSet and Tag need to be imported from bs4)
+def get_team_tds(content: bytes) -> ResultSet[Tag]:  # this should be update to ResultSet[Tag] (ResultSet and Tag need to be imported from bs4)
     # look for <td class="uos">
     soup: BeautifulSoup = BeautifulSoup(content, features='html.parser')
     team_tds: ResultSet[Tag] = soup.find_all('td', class_='uos')
@@ -228,6 +229,10 @@ def check_for_added_and_removed_members_by_teams(
     group_results=False,
     send_notifications=0,
 ) -> str:
+    """Fetch recent membership changes for each team and render them as HTML.
+
+    A positive ``send_notifications`` value replaces the default seven-day lookback.
+    """
     updates = ''
     messages = ''
     for team in teams:
@@ -323,7 +328,7 @@ def check_for_added_and_removed_members_by_teams(
 
 
 def complete_member_login(cookies: dict, member_id: str, headers: CaseInsensitiveDict = HEADERS) -> tuple[bool, requests.Response | None]:
-    """after logging in as member, this is used to log into a specific member profile or switching the member profile"""
+    """After logging in as member, this is used to log into a specific member profile or switch the member profile"""
     response: requests.Response = requests.get(
         'https://www.conventus.dk/before_login/choose_profil_action.php',
         params={'medlem': member_id},
@@ -341,7 +346,8 @@ def complete_member_login(cookies: dict, member_id: str, headers: CaseInsensitiv
 
 
 def get_member_profiles(content, profile: dict[str, str], team_profiles: list[dict[str, str | list[TeamData]]]):
-    """this is used for narrowing down the club members from member_get_profile_options to team members in the CONVENTUS_DEPT_NAME dept and then getting those team names"""
+    """Populate an eligible profile's supported teams and append the expanded profile to ``team_profiles``.
+    Only team members in the CONVENTUS_DEPT_NAME dept are eligible teams"""
     logger.debug(profile)
     soup = BeautifulSoup(content, features='html.parser')
     if os.environ.get('FLASK_ENV', '') == 'trace':
@@ -436,7 +442,7 @@ def header_passthru(headers: Headers | CaseInsensitiveDict, club_id: str = '', s
     return hdrs
 
 
-def coach_login_check(cookies, headers: CaseInsensitiveDict = HEADERS) -> bool:
+def coach_login_check(cookies, headers: CaseInsensitiveDict | Headers = HEADERS) -> bool:
     hdrs: CaseInsensitiveDict = header_passthru(headers, club_id=CONVENTUS_CLUB_ID)
     logger.debug('Testing coach login is still active by accessing the news subscription page')
     response: requests.Response = requests.get(
@@ -464,6 +470,10 @@ def member_login(
     phone_no: str = '',
     sessid: str = '',
 ):
+    """Authenticate a member and discover profiles belonging to supported teams.
+
+    Return the session cookies, selectable profiles, and whether authentication succeeded.
+    """
     logger.info('Logging into Conventus as member')
     logger.trace(f'Login type: {login_type}')
     login_data = {}
@@ -724,7 +734,8 @@ def get_members_from_csv(csv_text):
     return list(reader)
 
 
-def get_team_checkin_lists(team_id, cookies, headers=HEADERS) -> requests.Response:
+def get_team_checkin_lists(team_id, cookies, headers: CaseInsensitiveDict | Headers = HEADERS) -> requests.Response:
+    """Fetch a team's check-in-list page, raising ``SiteError`` if unavailable."""
     # can't use normal request "params" because the / will be converted to %2f, and while not necessary to url encode the team_id, still better to be consistent
     params: str = urlencode({'page': 'adressebog/afkrydsningslister/gruppe.php', 'gruppe': team_id}, safe='/')
     url: str = f'https://www.conventus.dk/login/loggedin.php?{params}'
@@ -804,6 +815,10 @@ def find_team_checkin_list_id_from_content(team_id, date, content) -> str:
 
 
 def add_checkin_list(cookies, team_id, date, headers=HEADERS):
+    """Create a dated team check-in list and return its redirected list identifier.
+
+    Raise ``SiteError`` when creation fails or the redirect contains no identifier.
+    """
     web_date = date
     logger.debug(f'{date} converted to {web_date}')
     params: str = urlencode({'page': 'adressebog/afkrydsningslister/add_action.php', 'gruppe': team_id}, safe='/')
@@ -831,7 +846,8 @@ def add_checkin_list(cookies, team_id, date, headers=HEADERS):
         raise SiteError(f'Failed to get check-in list ID from redirect: {redirect}')
 
 
-def get_checkin_list(cookies, team_id: str, date: str, list_id: str, headers: Headers | CaseInsensitiveDict = HEADERS):
+def get_checkin_list(cookies, team_id: str, date: str, list_id: str, headers: Headers | CaseInsensitiveDict = HEADERS) -> bytes | None:
+    """Fetch check-in-list content, returning ``None`` for a failed or redirected request."""
     params: str = urlencode({'page': 'adressebog/afkrydsningslister/liste.php', 'liste': list_id}, safe='/')
     url: str = f'https://www.conventus.dk/login/loggedin.php?{params}'
     hdrs: CaseInsensitiveDict = header_passthru(headers)
@@ -896,7 +912,7 @@ def passthru_check_action(request: Request, phpsessid: str):
     return real_response.text
 
 
-def run_login_loggedin_get(cookies, headers: CaseInsensitiveDict = HEADERS, allow_redirects=False) -> requests.Response:
+def run_login_loggedin_get(cookies, headers: CaseInsensitiveDict | Headers = HEADERS, allow_redirects=False) -> requests.Response:
     response = requests.get(
         'https://www.conventus.dk/login/loggedin.php?page=adressebog/medlemmer/start.php',
         headers=header_passthru(headers),
@@ -908,7 +924,7 @@ def run_login_loggedin_get(cookies, headers: CaseInsensitiveDict = HEADERS, allo
 
 
 def member_get_profile_options(content) -> list[dict[str, str]]:
-    """this is used for getting the list of club members from choose_profil.php that can login with the login provided"""
+    """If there are several profiles connected to a login, extract names and member IDs from the Conventus profile-selection page."""
     soup = BeautifulSoup(content, features='html.parser')
     member_table = soup.find('table', class_='bt')
     if member_table is None:
@@ -941,9 +957,13 @@ def member_get_profile_options(content) -> list[dict[str, str]]:
 
 
 def find_member_checkins(team_id, date, content, docs: list[models.Signout] | None = None) -> list[dict]:
-    """
+    """Combine members parsed from a check-in page with their sign-out records.
     From the content provided, find the members in the check-in list for the team and date, as well as query the DB for signouts
         and return a list of dicts with member_id, member_name, and status (checked-in or signed-out + reason)
+
+    a database failure is represented by an initial ``{'db_available': False}`` item. Raise
+    ``ParsingError`` when the expected member markup is absent or malformed.
+
     expected content:
         <div class="row body simple">
             <div class="col-xs-1">
@@ -1022,7 +1042,10 @@ def find_member_checkins(team_id, date, content, docs: list[models.Signout] | No
 
 
 def read_checkin_list_start_page(headers, cookies):
-    """this gets all teams in the department, and returns a list of dicts with team_id and team_name"""
+    """Return the Conventus check-in-list landing page content.
+
+    Raise ``SiteError`` when the request fails, redirects, or has an empty body.
+    """
     # don't use normal request "params" because the / will be converted to %2f, and while it's not strictly necessary in this case, still better to be consistent
     params = urlencode({'page': 'adressebog/afkrydsningslister/start.php'}, safe='/')
     url: str = f'https://www.conventus.dk/login/loggedin.php?{params}'
@@ -1081,6 +1104,11 @@ def parse_checkin_list_start_page(content, match_text='Trampolin') -> list[dict[
 
 
 def get_member_team_info_page(team_id, headers, cookies) -> str:
+    """Return a member's Conventus team-information page content.
+
+    Raise ``SessionError`` for an expired session and ``SiteError`` for other
+    failed, redirected, or empty responses.
+    """
     # https://www.conventus.dk/medlemslogin/popup.php?page=profil/mine_hold_info.php&idv1=1044963
     params = urlencode({'page': 'profil/mine_hold_info.php', 'idv1': team_id}, safe='/')
     url: str = f'https://www.conventus.dk/medlemslogin/popup.php?{params}'

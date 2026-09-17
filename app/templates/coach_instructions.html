@@ -3,53 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trænervejledning — Eir</title>
+    <title>Coach instructions — Eir</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='doc_styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='eir_favicon.ico') }}" />
 </head>
 <body>
     <div class="container">
-        <h1>Trænervejledning &ndash; Eir</h1>
+        <h1>Coach instructions &ndash; Eir</h1>
         <p class="updated">Sidste opdateret: 8. august 2026</p>
 
         <h2>What is Eir?</h2>
         <p class="intro">Eir er et værktøj bygget oven på Conventus. Man har adgang til de følgende funktioner:</p>
         <ul>
-            <li>Hold Afkrydsning &ndash; Man har mulighed for at afkrydse medlemmer på flere tilknyttede hold på en gang, f.eks. hvis to hold mødes samtidigt.</li>
-            <li>Vis holdafmeldinger &ndash; Se afmeldte medlemmer på dine hold.</li>
-            <li>Holdopdateringer &ndash; Se tilmeldte og frameldte medlemmer på dine hold.</li>
-            <li>Notifikationer &ndash; konfigurere Facebook Messenger og Telegram-notifikationer.</li>
+            <li>Calendar &ndash; The calendar shows all your teams. Links to GymDanmark events open the event on GymDanmark's website.</li>
+            <li>Holdafkrydsning &ndash;
+                <ul>
+                    <li>Afmeldinger til dit hold vises på afkrydsningslisten.</li>
+                    <li>Man har mulighed for at afkrydse medlemmer på flere tilknyttede hold på én gang, f.eks. hvis to hold mødes samtidigt.</li>
+                    <li>Man kan vise tidligere afkrydsningslister.</li>
+                </ul>
+            </li>
+            <li>Vis holdafmeldinger &ndash; Se afmeldte medlemmer på det valgte hold.</li>
+            <li>Holdopdateringer &ndash; Se tilmeldte og frameldte medlemmer på dine hold inden for den sidste uge.</li>
+            <li>Notifikationer &ndash; aktivering og konfiguration af Facebook Messenger- og Telegram-notifikationer.</li>
         </ul>
 
         <h2>Hvordan får man adgang til Eir?</h2>
-        <p>Som træner i et Trampolingymnastik hold på Greve Gymnastik og Trampolin, har du adgang til Eir gennem din Conventus-konto. Fra dette link: <a href="https://eir-qkcv.onrender.com/coach">https://eir-qkcv.onrender.com/coach</a>.</p>
+        <p>Som træner i et trampolingymnastikhold på Greve Gymnastik og Trampolin har du adgang til Eir gennem din Conventus-trænerkonto via dette link: <a href="https://eir-qkcv.onrender.com/coach">https://eir-qkcv.onrender.com/coach</a>. Åbn gerne linket i din browser for at logge ind (og ikke i den browser, der er indbygget i Messenger).</p>
 
-        <h2>Eir login</h2>
+        <h2>Login</h2>
         <p>Login giver adgang til Eirs funktioner.</p>
-        <p>Vælg <b>Mobil</b> eller <b>E-mail</b> og brug din Conventus login for adgang til Eir.</p>
-        <img src="{{url_for('static', filename='images/traenerlogin.png')}}" alt="Eir trænerlogin" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
-        <p>Eir gemmer <strong>ikke</strong> dit login eller andre personlige oplysninger fra din Conventus-konto. Din konto er brugt til at hente din hold information fra Conventus. Hver afmelding, der gemmes i Eirs database, bruger kun dit medlems-ID, hold-ID og de oplysninger, du har angivet ved afmeldingen. Eir modtager dit fornavn og efternavn fra Conventus for at personliggøre hovedmenuen. Når et login er gennemført, gemmes dit navn og holdoplysninger kun i din browser som en krypteret cookie.</p>
+        <p>For at få adgang til Eir, indtast dit Conventus-login og tryk på <strong>Log ind</strong>.</p>
+        <img src="{{url_for('static', filename='images/traenerlogin.jpg')}}" alt="Eir trænerlogin" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+        <p>Eir gemmer <strong>ikke</strong> din adgangskode eller andre personlige oplysninger fra din Conventus-konto. Din konto bruges til at hente dine holdoplysninger fra Conventus. Når du er logget ind, gemmes kun dit brugernavn og dine holdoplysninger i din browser som en krypteret cookie.</p>
 
-        <h2>Eir hovedmenu</h2>
+        <h2>Hovedmenu</h2>
         <p>Efter login får du adgang til Eirs hovedmenu, hvor du kan se dine aktuelle funktioner.</p>
-        <img src="{{url_for('static', filename='images/hovedmenu.png')}}" alt="Eir hovedmenu page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+        <img src="{{url_for('static', filename='images/hovedmenu.jpg')}}" alt="Eir hovedmenu page" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
 
-        <h2>Eir notifikationer</h2>
-        <p>Her kan du konfigurere Facebook Messenger- og Telegram-notifikationer.<br />
-            OBS: Når man er Sportschef, er man automatisk tilmeldte notifikationer til alle hold, men man kan vælge kun at få notifikationer fra de hold, hvor man er træner.<br /></p>
+        <h2>Kalender</h2>
+        <p>Her kan du se dine hold på kalenderen samt trampolinbegivenheder hentet fra GymDanmarks kalender.</p>
+        <table>
+            <tr>
+                <td>Måned:<br><img src="{{url_for('static', filename='images/cal_maaned.jpg')}}" alt="Måned" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>Uge:<br><img src="{{url_for('static', filename='images/cal_uge.jpg')}}" alt="Uge" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>År:<br><img src="{{url_for('static', filename='images/cal_aar.jpg')}}" alt="År" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+            </tr>
+        </table>
+
+        <h2>Holdafkrydsning</h2>
+        <p>Vælg en dato (dagens dato er automatisk valgt) og et hold. Når du vælger et hold, bliver en afkrydsningsliste automatisk genereret i Conventus, og afkrydsningslisten vises. Når du afkrydser medlemmer, opdateres listen i realtid.</p>
+        <table>
+            <tr>
+                <td>Valg af dato og hold:<br><img src="{{url_for('static', filename='images/afkrydsning1.jpg')}}" alt="" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>Afkrydsningsliste:<br><img src="{{url_for('static', filename='images/afkrydsning2.jpg')}}" alt="" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+            </tr>
+        </table>
+
+        <h2>Vis holdafmeldinger</h2>
+        <p>Vælg en dato (dagens dato er automatisk valgt) og et hold.</p>
+        <img src="{{url_for('static', filename='images/holdafmelding.jpg')}}" alt="Vælg en dato og et hold" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+        <table>
+            <tr>
+                <td>Når der er ingen afmeldinger:<br><img src="{{url_for('static', filename='images/holdafmelding1.jpg')}}" alt="ingen afmeldinger" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>Når der er afmeldinger:<br><img src="{{url_for('static', filename='images/holdafmelding2.jpg')}}" alt="med afmeldinger" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>Når holdet er afkrydset og der er ingen afmeldinger:<br><img src="{{url_for('static', filename='images/holdafmelding3.jpg')}}" alt="efter holdafkrydsning ingen afmeldinger" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+                <td>Når holdet er afkrydset og der er afmeldinger:<br><img src="{{url_for('static', filename='images/holdafmelding4.jpg')}}" alt="efter holdafkrydsning med afmeldinger" style="max-width: 50%; height: auto; margin-bottom: 1rem;"></td>
+            </tr>
+        </table>
+        <h2>Holdopdateringer</h2>
+        <p>Vent venligst, mens den indlæses.</p>
+        <img src="{{url_for('static', filename='images/holdopdatering.jpg')}}" alt="" style="max-width: 50%; height: auto; margin-bottom: 1rem;">
+
+        <h2>Notifikationer</h2>
+        <p>Her kan du konfigurere Facebook Messenger- eller Telegram-notifikationer.<br />
+            OBS: Når man er sportschef, er man automatisk tilmeldt notifikationer om alle hold, men man kan vælge kun at få notifikationer fra de hold, hvor man er træner.</p>
+
+        <h2>Medlemsvejledning</h2>
 
         <h2>Support</h2>
         <p>Eir er tilgængelig på dansk og engelsk, og support er tilgængelig på begge sprog.</p>
-        <p>Spørgsmål og support-anmodninger kan sendes til: <strong><span id="eir-contact"></span></strong>. Du kan også tilslutte dig vores Telegram-gruppe: <span id="eir-tg"></span></p>
+        <p>Spørgsmål og support-anmodninger kan sendes til: <strong><span id="eir-contact"></span></strong>.</p>
+
         <script>
             const encoded = "ZWlyQGFtZXJpY2FrZXMuZGs=";
             const email = atob(encoded);
             const container = document.getElementById("eir-contact");
             container.innerHTML = `<a href="mailto:${email}">${email}</a>`;
-            const encoded_tg = "aHR0cHM6Ly90Lm1lLytpYjIyZzU2U1N1b3dNRGsw";
-            const tg = atob(encoded_tg);
-            const container_tg = document.getElementById("eir-tg");
-            container_tg.innerHTML = `<a href="${tg}" target="_blank">${tg}</a>`;
         </script>
     </div>
 </body>

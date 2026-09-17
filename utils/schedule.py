@@ -71,6 +71,10 @@ def _configure_local_logger(debug=False) -> None:
 
 
 def publish(args: argparse.Namespace) -> None:
+    """Upload selected calendar files over SFTP according to the CLI options.
+
+    Exit with status 1 when connection or publishing fails.
+    """
     import paramiko
     import socket
 
@@ -216,7 +220,7 @@ def get_event_data_from_gymdanmark(trampoline_event_urls, config) -> tuple[list[
         if not event.ok:
             event.raise_for_status()
 
-        soup = BeautifulSoup(event.text, features='html.parser')
+        soup: BeautifulSoup = BeautifulSoup(event.text, features='html.parser')
         # save sample event, if config.save_test_data and not month_map is set, it will save the first event, because month_map isn't set until we read the first event
         if config.save_test_data and not month_map:
             with open(get_paths().data_path / 'event_raw.html', 'w', encoding='utf-8') as f:

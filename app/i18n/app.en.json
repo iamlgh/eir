@@ -160,6 +160,8 @@
   "choose_your_login": "Choose your login",
   "last_updated_": "Last updated:",
   "return_home": "Return Home",
+  "missing_service": "Page error: missing 'service' parameter. Linking is not available right now.",
+  "missing_code": "Page error: missing 'code' parameter. Linking is not available right now.",
   "end": "end"
 }
 
